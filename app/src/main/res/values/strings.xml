@@ -1,10 +1,15 @@
 <resources>
     <string name="app_name">MyCocktail</string>
     <string name="activity_main_title">COCKTAILS FOR YOU</string>
-    <string name="tab_all">all</string>
+    <string name="tab_log">my logEntry</string>
     <string name="tab_todays">todays</string>
     <string name="tab_popular">popular</string>
     <string name="tab_latest">latest</string>
     <string name="tab_favorite">favorite</string>
+
+
+    <string name="add_button">Add</string>
+    <string name="update_button">Update</string>
+
 
 </resources>

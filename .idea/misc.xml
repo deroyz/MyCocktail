@@ -3,12 +3,18 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Android Projects/MyCocktail/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Android Projects/MyCocktail/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.142" />
+        <entry key="..\:/Android Projects/MyCocktail/app/src/main/res/drawable-v24/priority_circle.xml" value="0.2085" />
+        <entry key="..\:/Android Projects/MyCocktail/app/src/main/res/layout/activity_add_log.xml" value="0.33" />
+        <entry key="..\:/Android Projects/MyCocktail/app/src/main/res/layout/activity_editor.xml" value="0.5" />
+        <entry key="..\:/Android Projects/MyCocktail/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Android Projects/MyCocktail/app/src/main/res/layout/fragment_all.xml" value="0.1" />
         <entry key="..\:/Android Projects/MyCocktail/app/src/main/res/layout/fragment_favorite.xml" value="0.2966485507246377" />
         <entry key="..\:/Android Projects/MyCocktail/app/src/main/res/layout/fragment_latest.xml" value="0.1879432624113475" />
+        <entry key="..\:/Android Projects/MyCocktail/app/src/main/res/layout/fragment_mylog.xml" value="0.25" />
         <entry key="..\:/Android Projects/MyCocktail/app/src/main/res/layout/fragment_popular.xml" value="0.1879432624113475" />
         <entry key="..\:/Android Projects/MyCocktail/app/src/main/res/layout/fragment_todays.xml" value="0.2916666666666667" />
+        <entry key="..\:/Android Projects/MyCocktail/app/src/main/res/layout/list_log.xml" value="0.33" />
       </map>
     </option>
   </component>

@@ -1,4 +1,4 @@
-package com.example.mycocktail;
+package com.example.mycocktail.adapter;
 
 
 import androidx.annotation.NonNull;
@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.example.mycocktail.fragment.FragmentAll;
+import com.example.mycocktail.fragment.FragmentMyLog;
 import com.example.mycocktail.fragment.FragmentFavorite;
 import com.example.mycocktail.fragment.FragmentLatest;
 import com.example.mycocktail.fragment.FragmentPopular;
@@ -25,7 +25,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return FragmentAll.newInstance();
+                return FragmentMyLog.newInstance();
             case 1:
                 return FragmentTodays.newInstance();
             case 2:
