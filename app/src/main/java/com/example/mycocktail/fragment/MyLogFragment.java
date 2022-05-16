@@ -3,6 +3,7 @@ package com.example.mycocktail.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,36 +11,39 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mycocktail.AddLogActivity;
+import com.example.mycocktail.AppExecutors;
 import com.example.mycocktail.MainActivity;
 import com.example.mycocktail.R;
 import com.example.mycocktail.adapter.LogAdapter;
 import com.example.mycocktail.data.LogDatabase;
 import com.example.mycocktail.data.LogEntry;
+import com.example.mycocktail.viewmodel.MyLogViewModel;
 
 import java.util.List;
 
-public class FragmentMyLog extends Fragment implements LogAdapter.ItemClickListener {
+public class MyLogFragment extends Fragment implements LogAdapter.ItemClickListener {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     private View mView;
     private Context mContext;
 
     private RecyclerView mRecyclerView;
-    private LogAdapter mAdapter;
+    private LogAdapter mLogAdapter;
 
     private LogDatabase mLogDatabase;
 
-    public static FragmentMyLog newInstance(){
+    public static MyLogFragment newInstance() {
 
-        FragmentMyLog fragmentMyLog = new FragmentMyLog();
-        return fragmentMyLog;
+        MyLogFragment myLogFragment = new MyLogFragment();
+        return myLogFragment;
 
     }
 
@@ -47,8 +51,8 @@ public class FragmentMyLog extends Fragment implements LogAdapter.ItemClickListe
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
-        mLogDatabase = LogDatabase.getInstance(getActivity().getApplicationContext());
+        mContext = getActivity().getApplicationContext();
+        mLogDatabase = LogDatabase.getInstance(mContext);
 
     }
 
@@ -57,10 +61,25 @@ public class FragmentMyLog extends Fragment implements LogAdapter.ItemClickListe
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         mView = inflater.inflate(R.layout.fragment_mylog, container, false);
+        mContext = mView.getContext();
+
+
+        Log.e(LOG_TAG, "onCreateView");
+
+        return mView;
+
+    }
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         setupUi();
 
-        return mView;
+        setupViewModel();
+
+        Log.e(LOG_TAG, "onViewCreated");
 
     }
 
@@ -68,13 +87,17 @@ public class FragmentMyLog extends Fragment implements LogAdapter.ItemClickListe
 
         mRecyclerView = mView.findViewById(R.id.rv_logs);
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
+        mRecyclerView.setHasFixedSize(true);
 
-        mAdapter = new LogAdapter(this, mContext);
-        mRecyclerView.setAdapter(mAdapter);
+        mLogAdapter = new LogAdapter(mLogDatabase, this, mContext, getActivity());
+        mRecyclerView.setAdapter(mLogAdapter);
 
-        DividerItemDecoration decoration = new DividerItemDecoration(getActivity().getApplicationContext(), DividerItemDecoration.VERTICAL);
-        mRecyclerView.addItemDecoration(decoration);
+        Log.e(LOG_TAG, "Recyclerview init in main fragment");
+
+        //DividerItemDecoration decoration = new DividerItemDecoration(getActivity().getApplicationContext(), DividerItemDecoration.VERTICAL);
+
+        //mRecyclerView.addItemDecoration(decoration);
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -82,15 +105,13 @@ public class FragmentMyLog extends Fragment implements LogAdapter.ItemClickListe
                 return false;
             }
 
-            // Called when a user swipes left or right on a ViewHolder
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                // Here is where you'll implement swipe to delete
                 AppExecutors.getInstance().diskIO().execute(new Runnable() {
                     @Override
                     public void run() {
                         int position = viewHolder.getAdapterPosition();
-                        List<LogEntry> logs = mAdapter.getLogs();
+                        List<LogEntry> logs = mLogAdapter.getLogs();
                         mLogDatabase.logDao().deleteLog(logs.get(position));
                     }
                 });
@@ -106,5 +127,20 @@ public class FragmentMyLog extends Fragment implements LogAdapter.ItemClickListe
         intent.putExtra(AddLogActivity.EXTRA_LOG_ID, itemId);
         startActivity(intent);
 
+    }
+
+    private void setupViewModel() {
+
+        MyLogViewModel myLogViewModel = new ViewModelProvider(this).get(MyLogViewModel.class);
+
+        Log.e(LOG_TAG, "Creating instance of myLog viewModel");
+
+        myLogViewModel.getLogList().observe(getViewLifecycleOwner(), new Observer<List<LogEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<LogEntry> logEntries) {
+                Log.e(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
+                mLogAdapter.setLogs(logEntries);
+            }
+        });
     }
 }

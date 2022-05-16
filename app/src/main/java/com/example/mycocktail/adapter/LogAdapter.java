@@ -1,6 +1,8 @@
 package com.example.mycocktail.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mycocktail.MainActivity;
 import com.example.mycocktail.R;
+import com.example.mycocktail.data.LogDatabase;
 import com.example.mycocktail.data.LogEntry;
 
 import java.text.NumberFormat;
@@ -19,28 +23,34 @@ import java.util.Locale;
 
 public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder> {
 
+    private static final String LOG_TAG = LogAdapter.class.getSimpleName();
+
     private static final String DATE_FORMAT = "dd/MM/yyy";
 
     final private ItemClickListener mItemClickListener;
 
     private List<LogEntry> mLogEntries;
     private Context mContext;
-
+    private Activity mActivity;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
 
 
-    public LogAdapter(ItemClickListener mItemClickListener, Context mContext) {
+    public LogAdapter(LogDatabase mLogDatabase, ItemClickListener mItemClickListener, Context mContext, Activity mActivity) {
+
         this.mItemClickListener = mItemClickListener;
         this.mContext = mContext;
+        this.mActivity = mActivity;
+        this.mLogEntries = mLogDatabase.logDao().loadALLLogs().getValue();
+
     }
 
     @NonNull
     @Override
     public LogViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(mContext)
-                .inflate(R.layout.fragment_mylog, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_log, parent, false);
 
         return new LogViewHolder(view);
 
@@ -49,22 +59,22 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull LogViewHolder holder, int position) {
 
-        LogEntry logEntry = mLogEntries.get(position);
+       final LogEntry logEntry = mLogEntries.get(position);
 
         String cocktailName = logEntry.getName();
+        holder.cocktailNameView.setText(cocktailName);
+
         String comment = logEntry.getComment();
+        holder.commentView.setText(comment);
+
+        String updatedAt = dateFormat.format(logEntry.getUpdatedAt());
+        holder.updatedAtView.setText(updatedAt);
 
         String price = NumberFormat.getCurrencyInstance(new Locale("US", "en"))
                 .format(logEntry.getPrice());
-
-        String updatedAt = dateFormat.format(logEntry.getUpdatedAt());
+        holder.cocktailPriceView.setText(price);
 
         String rating = "" + logEntry.getRating();
-
-        holder.cocktailNameView.setText(cocktailName);
-        holder.commentView.setText(comment);
-        holder.updatedAtView.setText(updatedAt);
-        holder.cocktailPriceView.setText(price);
         holder.ratingView.setText(rating);
 
     }
@@ -73,13 +83,14 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder> {
         return mLogEntries;
     }
 
-    public void setlogs(List<LogEntry> mLogEntries) {
+    public void setLogs(List<LogEntry> mLogEntries) {
         this.mLogEntries = mLogEntries;
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
+
         if (mLogEntries == null) {
             return 0;
         }
@@ -90,15 +101,19 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder> {
 
     public class LogViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView cocktailNameView;
-        TextView updatedAtView;
-        TextView commentView;
-        TextView cocktailPriceView;
-        TextView ratingView;
+        private View view;
+
+        private TextView cocktailNameView;
+        private TextView updatedAtView;
+        private TextView commentView;
+        private TextView cocktailPriceView;
+        private TextView ratingView;
 
 
         public LogViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            view = itemView.findViewById(R.id.list_item);
 
             cocktailNameView = itemView.findViewById(R.id.tv_cocktailName);
             updatedAtView = itemView.findViewById(R.id.tv_logUpdatedAt);

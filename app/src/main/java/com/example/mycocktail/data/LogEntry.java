@@ -2,6 +2,7 @@ package com.example.mycocktail.data;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.Date;
@@ -12,8 +13,7 @@ import java.util.Date;
 public class LogEntry {
     @PrimaryKey(autoGenerate = true)
 
-    private int id = 0;
-
+    private int id ;
     private String name;
     private String comment;
     private double price;
@@ -25,7 +25,25 @@ public class LogEntry {
 
     private Date updatedAt;
 
-    /*
+    @Ignore
+    public LogEntry(String name, String comment, double price, float rating, Date updatedAt) {
+
+        this.name = name;
+        this.comment = comment;
+        this.price = price;
+        this.rating = rating;
+        this.updatedAt = updatedAt;
+    }
+
+    public LogEntry(int id, String name, String comment, double price, float rating, Date updatedAt) {
+        this.id = id;
+        this.name = name;
+        this.comment = comment;
+        this.price = price;
+        this.rating = rating;
+        this.updatedAt = updatedAt;
+    }
+/*
 
     private Place place;
 

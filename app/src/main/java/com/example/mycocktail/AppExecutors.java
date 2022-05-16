@@ -1,4 +1,4 @@
-package com.example.mycocktail.fragment;
+package com.example.mycocktail;
 
 import android.os.Handler;
 import android.os.Looper;

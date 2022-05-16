@@ -11,6 +11,7 @@ import android.util.Log;
 
 @Database(entities = {LogEntry.class}, version = 1, exportSchema = false)
 @TypeConverters(DateConverter.class)
+
 public abstract class LogDatabase extends RoomDatabase {
 
     private static final String LOG_TAG = LogDatabase.class.getSimpleName();

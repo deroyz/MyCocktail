@@ -11,19 +11,19 @@ import androidx.fragment.app.Fragment;
 
 import com.example.mycocktail.R;
 
-public class FragmentLatest extends Fragment {
+public class TodaysFragment extends Fragment {
 
     private View view;
 
-    public static FragmentLatest newInstance(){
-        FragmentLatest fragmentLatest = new FragmentLatest();
-        return fragmentLatest;
+    public static TodaysFragment newInstance(){
+        TodaysFragment todaysFragment = new TodaysFragment();
+        return todaysFragment;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_latest, container, false);
+        view = inflater.inflate(R.layout.fragment_todays, container, false);
         return view;
     }
 }
