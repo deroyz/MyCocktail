@@ -17,7 +17,7 @@ public class RetrofitClient {
     private static RetrofitClient retrofitClient = null;
     private static RetrofitInterface retrofitInterface;
     private static final String API_KEY = "9973533";
-    private static final String BASE_URL = "http://www.thecocktaildb.com/";
+    private static final String BASE_URL = "https://www.thecocktaildb.com/";
 
     private RetrofitClient() {
 
@@ -26,17 +26,6 @@ public class RetrofitClient {
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new Interceptor() {
-                    @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
-                        Request originalRequest = chain.request();
-
-                        Request newRequest = originalRequest.newBuilder()
-                                .build();
-
-                        return chain.proceed(newRequest);
-                    }
-                })
                 .addInterceptor(loggingInterceptor)
                 .build();
 

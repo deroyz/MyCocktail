@@ -42,7 +42,7 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tab_log" />
+            android:text="@string/tab_latest" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -58,7 +58,7 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tab_latest" />
+            android:text="@string/tab_log" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"

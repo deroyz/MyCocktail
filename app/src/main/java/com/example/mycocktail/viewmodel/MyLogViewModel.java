@@ -17,13 +17,16 @@ public class MyLogViewModel extends ViewModel {
 
     private static final String TAG = MyLogViewModel.class.getSimpleName();
 
-    public LiveData<List<LogEntry>> logList;
+    public LiveData<List<LogEntry>> logList = new MutableLiveData<List<LogEntry>>();
+
+    public void onCreate(LogDatabase mLogDatabase) {
+
+        logList = mLogDatabase.logDao().loadALLLogs();
+
+    }
 
     public LiveData<List<LogEntry>> getLogList() {
 
-        if (logList == null){
-            logList = new MutableLiveData<List<LogEntry>>();
-        }
         return logList;
 
     }

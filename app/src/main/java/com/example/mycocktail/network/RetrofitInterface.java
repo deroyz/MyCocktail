@@ -14,7 +14,7 @@ public interface RetrofitInterface  {
     @GET("api/json/v2/9973533/popular.php")
     Call<DrinksResult> getPopularDrinks();
 
-    @GET("api/json/v2/9973533/latest.php")
+    @GET("api/json/v2/9973533/search.php?s=margarita")
     Call<DrinksResult> getLatestDrinks ();
 
 }

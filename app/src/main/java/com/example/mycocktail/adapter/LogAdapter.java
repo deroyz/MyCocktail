@@ -2,7 +2,6 @@ package com.example.mycocktail.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mycocktail.MainActivity;
 import com.example.mycocktail.R;
 import com.example.mycocktail.data.LogDatabase;
 import com.example.mycocktail.data.LogEntry;
@@ -27,18 +25,16 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder> {
 
     private static final String DATE_FORMAT = "dd/MM/yyy";
 
-    final private ItemClickListener mItemClickListener;
-
     private List<LogEntry> mLogEntries;
+    final private LogItemClickListener mLogItemClickListener;
     private Context mContext;
     private Activity mActivity;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
 
+    public LogAdapter(LogDatabase mLogDatabase, LogItemClickListener mLogItemClickListener, Context mContext, Activity mActivity) {
 
-    public LogAdapter(LogDatabase mLogDatabase, ItemClickListener mItemClickListener, Context mContext, Activity mActivity) {
-
-        this.mItemClickListener = mItemClickListener;
+        this.mLogItemClickListener = mLogItemClickListener;
         this.mContext = mContext;
         this.mActivity = mActivity;
         this.mLogEntries = mLogDatabase.logDao().loadALLLogs().getValue();
@@ -115,7 +111,7 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder> {
 
             view = itemView.findViewById(R.id.list_item);
 
-            cocktailNameView = itemView.findViewById(R.id.tv_cocktailName);
+            cocktailNameView = itemView.findViewById(R.id.tv_log_cocktailName);
             updatedAtView = itemView.findViewById(R.id.tv_logUpdatedAt);
             commentView = itemView.findViewById(R.id.tv_comment);
             cocktailPriceView = itemView.findViewById(R.id.tv_cocktailPrice);
@@ -128,11 +124,11 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder> {
         @Override
         public void onClick(View v) {
             int elementId = mLogEntries.get(getAdapterPosition()).getId();
-            mItemClickListener.onItemClickListener(elementId);
+            mLogItemClickListener.onItemClickListener(elementId);
         }
     }
 
-    public interface ItemClickListener {
+    public interface LogItemClickListener {
 
         void onItemClickListener(int itemId);
 

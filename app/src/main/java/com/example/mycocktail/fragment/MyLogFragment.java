@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mycocktail.AddLogActivity;
 import com.example.mycocktail.AppExecutors;
-import com.example.mycocktail.MainActivity;
 import com.example.mycocktail.R;
 import com.example.mycocktail.adapter.LogAdapter;
 import com.example.mycocktail.data.LogDatabase;
@@ -28,9 +27,9 @@ import com.example.mycocktail.viewmodel.MyLogViewModel;
 
 import java.util.List;
 
-public class MyLogFragment extends Fragment implements LogAdapter.ItemClickListener {
+public class MyLogFragment extends Fragment implements LogAdapter.LogItemClickListener {
 
-    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final String LOG_TAG = MyLogFragment.class.getSimpleName();
 
     private View mView;
     private Context mContext;
@@ -93,7 +92,7 @@ public class MyLogFragment extends Fragment implements LogAdapter.ItemClickListe
         mLogAdapter = new LogAdapter(mLogDatabase, this, mContext, getActivity());
         mRecyclerView.setAdapter(mLogAdapter);
 
-        Log.e(LOG_TAG, "Recyclerview init in main fragment");
+        Log.e(LOG_TAG, "Recyclerview init in my log fragment");
 
         //DividerItemDecoration decoration = new DividerItemDecoration(getActivity().getApplicationContext(), DividerItemDecoration.VERTICAL);
 
@@ -135,11 +134,16 @@ public class MyLogFragment extends Fragment implements LogAdapter.ItemClickListe
 
         Log.e(LOG_TAG, "Creating instance of myLog viewModel");
 
+        myLogViewModel.onCreate(mLogDatabase);
+
         myLogViewModel.getLogList().observe(getViewLifecycleOwner(), new Observer<List<LogEntry>>() {
+
             @Override
             public void onChanged(@Nullable List<LogEntry> logEntries) {
+
                 Log.e(LOG_TAG, "Updating list of tasks from LiveData in ViewModel");
                 mLogAdapter.setLogs(logEntries);
+
             }
         });
     }

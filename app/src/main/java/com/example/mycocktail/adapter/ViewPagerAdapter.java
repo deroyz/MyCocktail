@@ -25,13 +25,13 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return MyLogFragment.newInstance();
+                return LatestFragment.newInstance();
             case 1:
                 return TodaysFragment.newInstance();
             case 2:
                 return PopularFragment.newInstance();
             case 3:
-                return LatestFragment.newInstance();
+                return MyLogFragment.newInstance();
             case 4:
                 return FavoriteFragment.newInstance();
             default:
@@ -51,13 +51,13 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
-                return "MY LOGS";
+                return "LATEST";
             case 1:
                 return "TODAYS";
             case 2:
                 return "POPULAR";
             case 3:
-                return "LATEST";
+                return "MY LOGS";
             case 4:
                 return "FAVORITE";
             default:

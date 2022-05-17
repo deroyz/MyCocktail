@@ -10,9 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.mycocktail.adapter.LogAdapter;
 import com.example.mycocktail.adapter.ViewPagerAdapter;
-import com.example.mycocktail.data.LogDatabase;
 import com.example.mycocktail.network.RetrofitClient;
 import com.example.mycocktail.network.RetrofitInterface;
 import com.example.mycocktail.network.drinkmodel.Drink;
@@ -32,9 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
     private FragmentPagerAdapter fragmentPagerAdapter;
 
-    private RetrofitClient mRetrofitClient;
-    private RetrofitInterface mRetrofitInterface;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setElevation(0f);
 
         setUpViewPager();
-        setRetrofit();
 
         FloatingActionButton fabAddLogs = findViewById(R.id.fab_add_logs);
 
@@ -54,45 +48,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    private void setRetrofit() {
-        mRetrofitClient = RetrofitClient.getRetrofitClient();
-        mRetrofitInterface = RetrofitClient.getRetrofitInterface();
-
-        Log.e(LOG_TAG, "DisplayName: ");
-
-        mRetrofitInterface.getLatestDrinks().enqueue(new Callback<DrinksResult>() {
-
-            @Override
-            public void onResponse(Call<DrinksResult> call, Response<DrinksResult> response) {
-
-                DrinksResult drinksResult = response.body();
-
-                List<Drink> drinks = drinksResult.getDrinks();
-
-                String printMessage = "HI";
-
-                Log.e(LOG_TAG, "DisplayName: " + printMessage);
-
-                for (int i = 0; i < drinks.size(); i++) {
-
-                    printMessage = drinks.get(i).getStrDrink();
-
-                    Log.e(LOG_TAG, "DisplayName: " + printMessage);
-
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<DrinksResult> call, Throwable t) {
-                Log.e(LOG_TAG, "Connection Fail");
-
-            }
-
-
-        });
     }
 
     private void setUpViewPager() {
