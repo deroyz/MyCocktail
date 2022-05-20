@@ -13,8 +13,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mycocktail.AppExecutors;
 import com.example.mycocktail.R;
 import com.example.mycocktail.adapter.DrinkAdapter;
+import com.example.mycocktail.network.NetworkUtils;
 import com.example.mycocktail.network.RetrofitClient;
 import com.example.mycocktail.network.RetrofitInterface;
 import com.example.mycocktail.network.drinkmodel.Drink;
@@ -31,9 +33,6 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkItemC
     private static final String LOG_TAG = PopularFragment.class.getSimpleName();
 
     private View mView;
-
-    private RetrofitClient mRetrofitClient;
-    private RetrofitInterface mRetrofitInterface;
 
     private RecyclerView mRecyclerView;
     private DrinkAdapter mDrinkAdapter;
@@ -52,15 +51,19 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkItemC
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
+        Log.e(LOG_TAG, "onCreate");
+
         super.onCreate(savedInstanceState);
 
-        getPopularCocktails();
+        setupNetwork();
 
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        Log.e(LOG_TAG, "onCreateView");
 
         mView = inflater.inflate(R.layout.fragment_popular, container, false);
 
@@ -73,6 +76,7 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkItemC
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
+        Log.e(LOG_TAG, "onViewCreated");
 
         super.onViewCreated(view, savedInstanceState);
 
@@ -81,7 +85,7 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkItemC
 
     private void setupUi() {
 
-        Log.e(LOG_TAG, "Recyclerview init in popular fragment");
+        Log.e(LOG_TAG, "setupUi");
 
         mRecyclerView = mView.findViewById(R.id.rv_drinks);
 
@@ -93,41 +97,17 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkItemC
 
     }
 
-    private void getPopularCocktails() {
-        mRetrofitClient = RetrofitClient.getRetrofitClient();
-        mRetrofitInterface = RetrofitClient.getRetrofitInterface();
+    private void setupNetwork() {
 
-        Log.e(LOG_TAG, "Network Connection Start Using Retrofit ");
+        NetworkUtils networkUtils = new NetworkUtils();
 
-        mRetrofitInterface.getLatestDrinks().enqueue(new Callback<DrinksResult>() {
-
+        AppExecutors.getInstance().networkIO().execute(new Runnable() {
             @Override
-            public void onResponse(Call<DrinksResult> call, Response<DrinksResult> response) {
-
-                DrinksResult drinksResult = response.body();
-
-                mDrinks = drinksResult.getDrinks();
-
-                String printMessage = "Connection Success";
-
-                Log.e(LOG_TAG, "DisplayName: " + printMessage);
-
-                for (int i = 0; i < mDrinks.size(); i++) {
-
-                    printMessage = mDrinks.get(i).getStrDrink();
-
-                    Log.e(LOG_TAG, "DisplayName: " + printMessage);
-
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<DrinksResult> call, Throwable t) {
-                Log.e(LOG_TAG, "Connection Fail" + t.toString());
-
+            public void run() {
+                mDrinks = networkUtils.getPopularDrinks();
             }
         });
+
     }
 
     @Override

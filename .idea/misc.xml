@@ -5,7 +5,7 @@
       <map>
         <entry key="..\:/Android Projects/MyCocktail/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.142" />
         <entry key="..\:/Android Projects/MyCocktail/app/src/main/res/drawable-v24/priority_circle.xml" value="0.2085" />
-        <entry key="..\:/Android Projects/MyCocktail/app/src/main/res/layout/activity_add_log.xml" value="0.33" />
+        <entry key="..\:/Android Projects/MyCocktail/app/src/main/res/layout/activity_add_log.xml" value="0.1608832807570978" />
         <entry key="..\:/Android Projects/MyCocktail/app/src/main/res/layout/activity_editor.xml" value="0.5" />
         <entry key="..\:/Android Projects/MyCocktail/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Android Projects/MyCocktail/app/src/main/res/layout/fragment_all.xml" value="0.1" />
@@ -25,5 +25,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.33" />
+      </ProjectState>
+    </option>
   </component>
 </project>

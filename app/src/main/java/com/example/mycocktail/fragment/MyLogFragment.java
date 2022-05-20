@@ -49,6 +49,8 @@ public class MyLogFragment extends Fragment implements LogAdapter.LogItemClickLi
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
+        Log.e(LOG_TAG, "onCreate");
+
         super.onCreate(savedInstanceState);
         mContext = getActivity().getApplicationContext();
         mLogDatabase = LogDatabase.getInstance(mContext);
@@ -59,11 +61,10 @@ public class MyLogFragment extends Fragment implements LogAdapter.LogItemClickLi
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        Log.e(LOG_TAG, "onCreateView");
+
         mView = inflater.inflate(R.layout.fragment_mylog, container, false);
         mContext = mView.getContext();
-
-
-        Log.e(LOG_TAG, "onCreateView");
 
         return mView;
 

@@ -5,57 +5,76 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageButton
+        android:id="@+id/img_btn_cocktail"
+        android:layout_width="227dp"
+        android:layout_height="294dp"
+        android:layout_marginTop="16dp"
+        android:adjustViewBounds="true"
+        android:minHeight="250dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.086"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_camera" />
+
     <EditText
         android:id="@+id/et_cocktail_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="366dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="Cocktail Name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/img_btn_cocktail"
+        app:layout_constraintTop_toBottomOf="@+id/img_btn_cocktail" />
 
     <EditText
         android:id="@+id/et_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="000.00"
+        android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="@+id/et_cocktail_name"
         app:layout_constraintTop_toBottomOf="@+id/et_cocktail_name" />
 
     <EditText
         android:id="@+id/et_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:inputType="textPersonName"
+        android:layout_width="380dp"
+        android:layout_height="146dp"
+        android:layout_marginTop="16dp"
         android:hint="Comment"
-        app:layout_constraintStart_toStartOf="@+id/et_price"
-        app:layout_constraintTop_toBottomOf="@+id/et_price" />
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rb_cocktail" />
 
     <RatingBar
         android:id="@+id/rb_cocktail"
         android:layout_width="240dp"
         android:layout_height="50dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="@+id/et_comment"
-        app:layout_constraintTop_toBottomOf="@+id/et_comment" />
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.093"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_price" />
 
     <Button
         android:id="@+id/btn_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/add_button"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rb_cocktail" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
