@@ -5,11 +5,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.mycocktail.R;
 import com.example.mycocktail.data.LogDatabase;
 import com.example.mycocktail.data.LogEntry;
@@ -58,20 +60,25 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder> {
        final LogEntry logEntry = mLogEntries.get(position);
 
         String cocktailName = logEntry.getName();
-        holder.cocktailNameView.setText(cocktailName);
+        holder.textViewCocktailName.setText(cocktailName);
 
         String comment = logEntry.getComment();
-        holder.commentView.setText(comment);
+        holder.textViewComment.setText(comment);
 
         String updatedAt = dateFormat.format(logEntry.getUpdatedAt());
-        holder.updatedAtView.setText(updatedAt);
+        holder.textViewUpdatedAt.setText(updatedAt);
 
         String price = NumberFormat.getCurrencyInstance(new Locale("US", "en"))
                 .format(logEntry.getPrice());
-        holder.cocktailPriceView.setText(price);
+        holder.textViewPrice.setText(price);
 
         String rating = "" + logEntry.getRating();
-        holder.ratingView.setText(rating);
+        holder.textViewRating.setText(rating);
+
+        String photoPath = logEntry.getPhotoPath();
+                Glide.with(mContext)
+                .load(photoPath)
+                .into(holder.imageViewLogCocktail);
 
     }
 
@@ -99,11 +106,12 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder> {
 
         private View view;
 
-        private TextView cocktailNameView;
-        private TextView updatedAtView;
-        private TextView commentView;
-        private TextView cocktailPriceView;
-        private TextView ratingView;
+        private TextView textViewCocktailName;
+        private TextView textViewUpdatedAt;
+        private TextView textViewComment;
+        private TextView textViewPrice;
+        private TextView textViewRating;
+        private ImageView imageViewLogCocktail;
 
 
         public LogViewHolder(@NonNull View itemView) {
@@ -111,11 +119,12 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder> {
 
             view = itemView.findViewById(R.id.list_item);
 
-            cocktailNameView = itemView.findViewById(R.id.tv_log_cocktailName);
-            updatedAtView = itemView.findViewById(R.id.tv_logUpdatedAt);
-            commentView = itemView.findViewById(R.id.tv_comment);
-            cocktailPriceView = itemView.findViewById(R.id.tv_cocktailPrice);
-            ratingView = itemView.findViewById(R.id.tv_rating);
+            textViewCocktailName = itemView.findViewById(R.id.tv_log_cocktailName);
+            textViewUpdatedAt = itemView.findViewById(R.id.tv_logUpdatedAt);
+            textViewComment = itemView.findViewById(R.id.tv_comment);
+            textViewPrice = itemView.findViewById(R.id.tv_cocktailPrice);
+            textViewRating = itemView.findViewById(R.id.tv_rating);
+            imageViewLogCocktail = itemView.findViewById(R.id.iv_log_cocktail);
 
             itemView.setOnClickListener(this);
 

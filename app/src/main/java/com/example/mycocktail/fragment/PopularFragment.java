@@ -92,7 +92,7 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkItemC
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
         mRecyclerView.setHasFixedSize(true);
 
-        mDrinkAdapter = new DrinkAdapter (mDrinks, this, mContext, getActivity());
+        mDrinkAdapter = new DrinkAdapter(mDrinks, this, mContext, getActivity());
         mRecyclerView.setAdapter(mDrinkAdapter);
 
     }
@@ -101,12 +101,7 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkItemC
 
         NetworkUtils networkUtils = new NetworkUtils();
 
-        AppExecutors.getInstance().networkIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                mDrinks = networkUtils.getPopularDrinks();
-            }
-        });
+        mDrinks = networkUtils.getPopularDrinks();
 
     }
 

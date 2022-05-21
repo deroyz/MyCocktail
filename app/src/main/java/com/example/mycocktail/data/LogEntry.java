@@ -19,29 +19,34 @@ public class LogEntry {
     private double price;
     private float rating;
 
-    private String photoPath;
+
 
     @ColumnInfo(name = "updated_at")
 
     private Date updatedAt;
 
-    @Ignore
-    public LogEntry(String name, String comment, double price, float rating, Date updatedAt) {
+    private String photoPath;
+
+
+    public LogEntry(String name, String comment, double price, float rating, Date updatedAt, String photoPath) {
 
         this.name = name;
         this.comment = comment;
         this.price = price;
         this.rating = rating;
         this.updatedAt = updatedAt;
+        this.photoPath = photoPath;
     }
 
-    public LogEntry(int id, String name, String comment, double price, float rating, Date updatedAt) {
+    @Ignore
+    public LogEntry(int id, String name, String comment, double price, float rating, Date updatedAt, String photoPath) {
         this.id = id;
         this.name = name;
         this.comment = comment;
         this.price = price;
         this.rating = rating;
         this.updatedAt = updatedAt;
+        this.photoPath = photoPath;
     }
 /*
 

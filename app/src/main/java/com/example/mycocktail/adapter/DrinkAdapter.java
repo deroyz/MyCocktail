@@ -85,7 +85,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
             super(itemView);
 
             cocktailName = itemView.findViewById(R.id.tv_drink_cocktailName);
-            cocktailImage = itemView.findViewById(R.id.iv_cocktail);
+            cocktailImage = itemView.findViewById(R.id.iv_drink_cocktail);
 
             itemView.setOnClickListener(this);
 

@@ -1,13 +1,6 @@
 package com.example.mycocktail.network;
 
-import com.example.mycocktail.MainActivity;
-import com.example.mycocktail.network.RetrofitInterface;
-
-import java.io.IOException;
-
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

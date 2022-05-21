@@ -1,4 +1,4 @@
-package com.example.mycocktail;
+package com.example.mycocktail.activity;
 
 
 import android.content.Intent;
@@ -10,13 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.mycocktail.R;
 import com.example.mycocktail.adapter.ViewPagerAdapter;
-import com.example.mycocktail.network.NetworkUtils;
-import com.example.mycocktail.network.drinkmodel.Drink;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
