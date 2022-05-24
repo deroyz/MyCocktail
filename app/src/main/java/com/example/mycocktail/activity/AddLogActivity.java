@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -89,24 +90,37 @@ public class AddLogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_log);
 
+        // Initializes view configurations
         initViews();
 
+        // Create instance of log database
         mLogDatabase = LogDatabase.getInstance(getApplicationContext());
 
+        // Initial Input Add Mode
         if (savedInstanceState != null && savedInstanceState.containsKey(INSTANCE_LOG_ID)) {
             mLogId = savedInstanceState.getInt(INSTANCE_LOG_ID, DEFAULT_LOG_ID);
         }
 
+        // Existing Log Update Mode
         Intent intent = getIntent();
 
         if (intent != null && intent.hasExtra(EXTRA_LOG_ID)) {
+
             mAddButton.setText(R.string.update_button);
+
             if (mLogId == DEFAULT_LOG_ID) {
+
+                //Receives Log ID
                 mLogId = intent.getIntExtra(EXTRA_LOG_ID, DEFAULT_LOG_ID);
+
+                //Create viewModel instance
                 AddLogViewModelFactory factory = new AddLogViewModelFactory(mLogDatabase, mLogId);
+
                 mViewModel = new ViewModelProvider(
                         this, (ViewModelProvider.Factory) factory).get(AddLogViewModel.class);
+
                 mViewModel.getLog().observe(this, new Observer<LogEntry>() {
+
                     @Override
                     public void onChanged(LogEntry logEntry) {
                         mViewModel.getLog().removeObserver(this);
@@ -114,7 +128,9 @@ public class AddLogActivity extends AppCompatActivity {
                     }
                 });
             }
+
         }
+
 
     }
 
@@ -153,10 +169,12 @@ public class AddLogActivity extends AppCompatActivity {
 
     private void onAddPlaceButtonClicked() {
 
-        Intent intent = new Intent(this, SearchActivity.class);
+        Intent intent = new Intent(this, GoogleMapsActivity.class);
         startActivity(intent);
 
     }
+
+
 
     private void onAddButtonClicked() {
 
@@ -383,7 +401,8 @@ public class AddLogActivity extends AppCompatActivity {
                 } else {
                     Log.e(LOG_TAG, "Take Photo Canceled");
                     Toast.makeText(this, "Canceled", Toast.LENGTH_LONG).show();
-                } break;
+                }
+                break;
 
             case PICK_IMAGE:
                 if (resultCode == RESULT_OK) {
@@ -412,7 +431,8 @@ public class AddLogActivity extends AppCompatActivity {
 
                 } else {
                     Log.e(LOG_TAG, "Get Photo Canceled");
-                } break;
+                }
+                break;
 
             default:
                 break;

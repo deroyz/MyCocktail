@@ -37,6 +37,9 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkItemC
     private RecyclerView mRecyclerView;
     private DrinkAdapter mDrinkAdapter;
 
+    private RetrofitClient mRetrofitClient;
+    private RetrofitInterface mRetrofitInterface;
+
     private List<Drink> mDrinks;
     private Context mContext;
 
@@ -99,11 +102,49 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkItemC
 
     private void setupNetwork() {
 
-        NetworkUtils networkUtils = new NetworkUtils();
+        if (mDrinks != null) {
+            mDrinks = null;
+        }
+        mRetrofitClient = RetrofitClient.getRetrofitClient();
+        mRetrofitInterface = RetrofitClient.getRetrofitInterface();
 
-        mDrinks = networkUtils.getPopularDrinks();
+        Log.e(LOG_TAG, "Network Connection Start Using Retrofit ");
+
+        mRetrofitInterface.getLatestDrinks().enqueue(new Callback<DrinksResult>() {
+
+            @Override
+            public void onResponse(Call<DrinksResult> call, Response<DrinksResult> response) {
+
+                DrinksResult drinksResult = response.body();
+
+                mDrinks = drinksResult.getDrinks();
+
+                mDrinkAdapter.setDrinks(mDrinks);
+
+                String printMessage = "Connection Success";
+
+                Log.e(LOG_TAG, "DisplayName: " + printMessage);
+
+                for (int i = 0; i < mDrinks.size(); i++) {
+
+                    printMessage = mDrinks.get(i).getStrDrink();
+
+                    Log.e(LOG_TAG, "DisplayName: " + printMessage);
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<DrinksResult> call, Throwable t) {
+                Log.e(LOG_TAG, "Connection Fail" + t.toString());
+
+            }
+        });
+
 
     }
+
 
     @Override
     public void onItemClickListener(int itemId) {

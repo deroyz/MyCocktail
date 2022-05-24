@@ -10,6 +10,7 @@ import com.example.mycocktail.data.LogEntry;
 
 public class AddLogViewModel extends ViewModel {
 
+
     private LiveData<LogEntry> log;
 
 

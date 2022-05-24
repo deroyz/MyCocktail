@@ -38,6 +38,11 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
 
     }
 
+    public void setDrinks(List<Drink> mDrinks) {
+        this.mDrinks = mDrinks;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public DrinkViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
