@@ -2,6 +2,7 @@ package com.example.mycocktail.activity;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,7 +22,10 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -89,6 +93,8 @@ public class AddLogActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_log);
+
+        setupGoogleMapActivityOpenLauncher();
 
         // Initializes view configurations
         initViews();
@@ -302,6 +308,27 @@ public class AddLogActivity extends AppCompatActivity {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, PICK_IMAGE);
     }
+
+    public void openGoogleMapActivityForResult() {
+        Intent intent = new Intent(this, GoogleMapsActivity.class);
+        someActivityResultLauncher.launch(intent);
+    }
+
+
+    public void setupGoogleMapActivityOpenLauncher(){
+        ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            // There are no request codes
+                            Intent data = result.getData();
+                        }
+                    }
+                });
+    }
+
 
     private void checkCameraPermission() {
 
