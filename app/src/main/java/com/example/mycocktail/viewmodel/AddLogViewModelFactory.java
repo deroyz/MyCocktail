@@ -18,8 +18,10 @@ public class AddLogViewModelFactory extends ViewModelProvider.NewInstanceFactory
     }
 
     public <T extends ViewModel> T create(Class<T> modelClass) {
+
         //noinspection unchecked
         return (T) new AddLogViewModel(mLogDatabase, mLogId);
+
     }
 
 }

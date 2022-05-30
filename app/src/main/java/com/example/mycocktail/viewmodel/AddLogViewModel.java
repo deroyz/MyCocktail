@@ -20,8 +20,6 @@ public class AddLogViewModel extends ViewModel {
 
     }
 
-
-
     public LiveData<LogEntry> getLog() {
         return log;
     }

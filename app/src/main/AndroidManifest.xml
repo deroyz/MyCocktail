@@ -2,23 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mycocktail">
 
-    //Internet Permission
     <uses-permission android:name="android.permission.INTERNET" />
-
-    //Camera and Storage Permission
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    //Location Permission
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <queries>
+
         <!-- Browser -->
         <intent>
             <action android:name="android.intent.action.VIEW" />
+
             <data android:scheme="http" />
         </intent>
 
@@ -59,12 +56,13 @@
         <activity
             android:name=".activity.AddLogActivity"
             android:label="add_log_activity" />
-
+        <activity
+            android:name=".activity.DetailActivity"
+            android:label="detail_activity" />
         <activity
             android:name=".activity.GoogleMapsActivity"
             android:label="search_activity" />
 
-        //Content Provider for Camera Feature
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -75,12 +73,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        //Google Maps API key
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
-
     </application>
-
 
 </manifest>

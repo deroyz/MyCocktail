@@ -15,7 +15,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_logs"
@@ -24,6 +26,6 @@
         android:clipToPadding="false"
         android:paddingBottom="80dp"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
+        tools:layout_editor_absoluteY="0dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

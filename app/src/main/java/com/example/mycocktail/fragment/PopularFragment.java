@@ -26,7 +26,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PopularFragment extends Fragment implements DrinkAdapter.DrinkItemClickListener {
+public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapterListener {
 
     private static final String LOG_TAG = PopularFragment.class.getSimpleName();
 

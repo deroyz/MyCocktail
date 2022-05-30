@@ -54,7 +54,6 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
                 return "ALL";
             case 1:
                 return "MYLOG";
-
             case 2:
                 return "POPULAR";
             case 3:

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,16 +25,16 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
     private static final String LOG_TAG = LogAdapter.class.getSimpleName();
 
     private List<Drink> mDrinks;
-    private DrinkItemClickListener mDrinkItemClickListener;
+    private DrinkAdapterListener mDrinkAdapterListener;
     private Context mContext;
     private Activity mActivity;
 
-    public DrinkAdapter(List<Drink> drinks, DrinkItemClickListener drinkItemClickListener, Context context, FragmentActivity activity) {
+    public DrinkAdapter(List<Drink> drinks, DrinkAdapterListener drinkAdapterListener, Context context, FragmentActivity activity) {
 
-        mDrinks = drinks;
-        mDrinkItemClickListener = drinkItemClickListener;
-        mContext = context;
-        mActivity = activity;
+        this.mDrinks = drinks;
+        this.mDrinkAdapterListener = drinkAdapterListener;
+        this.mContext = context;
+        this.mActivity = activity;
 
     }
 
@@ -62,7 +64,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
 
         holder.cocktailName.setText(cocktailName);
 
-                Glide.with(holder.itemView)
+        Glide.with(holder.itemView)
                 .load(imageUrl)
                 .into(holder.cocktailImage);
 
@@ -83,12 +85,19 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
 
         private TextView cocktailName;
         private ImageView cocktailImage;
+        private Button recipeButton;
+        private Button logButton;
+        private CheckBox favoriteButton;
+
 
         public DrinkViewHolder(@NonNull View itemView) {
             super(itemView);
 
             cocktailName = itemView.findViewById(R.id.tv_drink_cocktailName);
             cocktailImage = itemView.findViewById(R.id.iv_drink_cocktail);
+            recipeButton = itemView.findViewById(R.id.btn_get_recipe);
+            logButton = itemView.findViewById(R.id.btn_add_to_log);
+            favoriteButton = itemView.findViewById(R.id.btn_favorite);
 
             itemView.setOnClickListener(this);
 
@@ -97,14 +106,14 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
         @Override
         public void onClick(View v) {
 
-            int elementId = Integer.parseInt(mDrinks.get(getAdapterPosition()).getIdDrink());
-            mDrinkItemClickListener.onItemClickListener(elementId);
+            int elementId = Integer.parseInt(mDrinks.get(getBindingAdapterPosition()).getIdDrink());
+            mDrinkAdapterListener.onItemClickListener(elementId);
 
         }
 
     }
 
-    public interface DrinkItemClickListener {
+    public interface DrinkAdapterListener {
 
         void onItemClickListener(int itemId);
 
