@@ -43,6 +43,9 @@ import com.example.mycocktail.data.LogDatabase;
 import com.example.mycocktail.data.LogEntry;
 import com.example.mycocktail.viewmodel.AddLogViewModel;
 import com.example.mycocktail.viewmodel.AddLogViewModelFactory;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -80,14 +83,18 @@ public class AddLogActivity extends AppCompatActivity {
     EditText mEditTextPrice;
     EditText mEditTextComment;
     EditText mEditTextPlace;
-    RatingBar mRatingBar;
 
-    Button mAddButton;
+    RatingBar mRatingBar;
     ImageView mImageViewPhoto;
+    Button mAddButton;
 
     private String mCurrentPhotoPath;
     private LogDatabase mLogDatabase;
     private AddLogViewModel mViewModel;
+
+    private PlacesClient mPlacesClient;
+
+    private ActivityResultLauncher<Intent> mGoogleMapActivityLauncher;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -175,11 +182,14 @@ public class AddLogActivity extends AppCompatActivity {
 
     private void onAddPlaceButtonClicked() {
 
+        /*
         Intent intent = new Intent(this, GoogleMapsActivity.class);
         startActivity(intent);
+         */
+
+        openGoogleMapActivityForResult();
 
     }
-
 
 
     private void onAddButtonClicked() {
@@ -286,6 +296,7 @@ public class AddLogActivity extends AppCompatActivity {
         }
     }
 
+    //ff
     private File createImageFile() throws IOException {
 
         //타임포맷
@@ -310,23 +321,39 @@ public class AddLogActivity extends AppCompatActivity {
     }
 
     public void openGoogleMapActivityForResult() {
+
         Intent intent = new Intent(this, GoogleMapsActivity.class);
-        someActivityResultLauncher.launch(intent);
+        mGoogleMapActivityLauncher.launch(intent);
+
     }
 
 
-    public void setupGoogleMapActivityOpenLauncher(){
+    public void setupGoogleMapActivityOpenLauncher() {
+
+
         ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
+
                     @Override
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             // There are no request codes
                             Intent data = result.getData();
+
+                            String selectedPlaceId = data.getStringExtra(GoogleMapsActivity.PLACE_ID);
+
+                            Log.e(LOG_TAG, selectedPlaceId);
+
+
+
+
                         }
                     }
                 });
+
+        mGoogleMapActivityLauncher = someActivityResultLauncher;
+
     }
 
 

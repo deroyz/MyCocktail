@@ -2,8 +2,6 @@ package com.example.mycocktail.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.media.Image;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mycocktail.R;
-import com.example.mycocktail.network.drinkmodel.Drink;
+import com.example.mycocktail.network.datamodel.Drink;
 
 import java.util.List;
 

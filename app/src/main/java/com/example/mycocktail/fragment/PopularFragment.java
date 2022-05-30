@@ -13,14 +13,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mycocktail.AppExecutors;
 import com.example.mycocktail.R;
 import com.example.mycocktail.adapter.DrinkAdapter;
-import com.example.mycocktail.network.NetworkUtils;
 import com.example.mycocktail.network.RetrofitClient;
 import com.example.mycocktail.network.RetrofitInterface;
-import com.example.mycocktail.network.drinkmodel.Drink;
-import com.example.mycocktail.network.drinkmodel.DrinksResult;
+import com.example.mycocktail.network.datamodel.Drink;
+import com.example.mycocktail.network.datamodel.DrinksResult;
 
 import java.util.List;
 
@@ -90,7 +88,7 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkItemC
 
         Log.e(LOG_TAG, "setupUi");
 
-        mRecyclerView = mView.findViewById(R.id.rv_drinks);
+        mRecyclerView = mView.findViewById(R.id.rv_popular_drinks);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
         mRecyclerView.setHasFixedSize(true);
@@ -108,25 +106,22 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkItemC
         mRetrofitClient = RetrofitClient.getRetrofitClient();
         mRetrofitInterface = RetrofitClient.getRetrofitInterface();
 
-        Log.e(LOG_TAG, "Network Connection Start Using Retrofit ");
+        Log.e(LOG_TAG, "Network Connection Attempt");
 
-        mRetrofitInterface.getLatestDrinks().enqueue(new Callback<DrinksResult>() {
+        mRetrofitInterface.getPopularDrinks().enqueue(new Callback<DrinksResult>() {
 
             @Override
             public void onResponse(Call<DrinksResult> call, Response<DrinksResult> response) {
 
                 DrinksResult drinksResult = response.body();
-
                 mDrinks = drinksResult.getDrinks();
-
                 mDrinkAdapter.setDrinks(mDrinks);
 
-                String printMessage = "Connection Success";
-
-                Log.e(LOG_TAG, "DisplayName: " + printMessage);
+                Log.e(LOG_TAG, "Connection Success");
 
                 for (int i = 0; i < mDrinks.size(); i++) {
 
+                    String printMessage = "";
                     printMessage = mDrinks.get(i).getStrDrink();
 
                     Log.e(LOG_TAG, "DisplayName: " + printMessage);

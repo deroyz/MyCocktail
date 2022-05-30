@@ -2,10 +2,14 @@ package com.example.mycocktail.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -16,7 +20,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.mycocktail.R;
-import com.example.mycocktail.viewmodel.MyLogViewModel;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -52,21 +55,41 @@ public class GoogleMapsActivity extends AppCompatActivity implements OnMapReadyC
     private FragmentManager fragmentManager;
     private MapFragment mapFragment;
 
+    private Button mButton;
+
     private ActivityResultLauncher<String[]> requestPermissionLauncher;
 
     private String PERMISSIONS[] = {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
     };
+
     private final int PERMISSION_REQUEST_CODE = 101;
+    private LatLng mCurrentLatLng;
+    private Place mCurrentPlace;
+    private GoogleMap mGoogleMap;
 
-
-
+    public static final String PLACE_ID = "placeID";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+
+        setContentView(R.layout.activity_googlemap);
+
+        mButton = findViewById(R.id.button);
+
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra(PLACE_ID, mCurrentPlace.getId());
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
+
+            }
+        });
 
         setupPermissionLauncher();
 
@@ -176,7 +199,7 @@ public class GoogleMapsActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    private void fetchPlace(){
+    private void fetchPlace() {
 
 
     }
@@ -204,16 +227,16 @@ public class GoogleMapsActivity extends AppCompatActivity implements OnMapReadyC
                 = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_auto_complete);
 
         //Specify the types of place data to return
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
 
         //Bias results to a specific region
         autocompleteFragment.setLocationBias(RectangularBounds.newInstance(
                 new LatLng(-33.880490, 151.184363),
                 new LatLng(-33.858754, 151.229596)));
-
         //Setup filter
         autocompleteFragment.setTypeFilter(TypeFilter.ESTABLISHMENT);
         autocompleteFragment.setTypeFilter(TypeFilter.ADDRESS);
+
 
         //Set up a PlaceSelectionListener to handle the response
         autocompleteFragment.setOnPlaceSelectedListener((new PlaceSelectionListener() {
@@ -228,8 +251,19 @@ public class GoogleMapsActivity extends AppCompatActivity implements OnMapReadyC
                 //  TODO: Get info about the selected place
                 Log.e(LOG_TAG, "Place: " + place.getName() + ", " + place.getId());
 
+                mCurrentPlace = place;
+                mCurrentLatLng = place.getLatLng();
 
+                Log.e(LOG_TAG, "LatLng: " + place.getName() + ", " + mCurrentLatLng);
 
+                if (mCurrentLatLng!=null) {
+
+                    mGoogleMap.addMarker(new MarkerOptions()
+                            .position(mCurrentLatLng)
+                            .title("Marker in Sydney"));
+                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(mCurrentLatLng));
+
+                }
             }
         }));
     }
@@ -239,6 +273,7 @@ public class GoogleMapsActivity extends AppCompatActivity implements OnMapReadyC
         Log.e(LOG_TAG, "getGoogleMapFragment");
 
         fragmentManager = getFragmentManager();
+
         mapFragment = (MapFragment) fragmentManager.findFragmentById(R.id.fragment_google_map);
         mapFragment.getMapAsync(this);
     }
@@ -249,14 +284,24 @@ public class GoogleMapsActivity extends AppCompatActivity implements OnMapReadyC
         Log.e(LOG_TAG, "onMapReady");
 
         LatLng location = new LatLng(37.485284, 126.901451);
+
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.title("Guro");
         markerOptions.snippet("Metro Station");
         markerOptions.position(location);
+
         googleMap.addMarker(markerOptions);
-
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
+        mGoogleMap = googleMap;
 
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        finish();
 
     }
 }

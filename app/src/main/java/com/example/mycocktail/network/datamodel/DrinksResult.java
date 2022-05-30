@@ -1,4 +1,4 @@
-package com.example.mycocktail.network.drinkmodel;
+package com.example.mycocktail.network.datamodel;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

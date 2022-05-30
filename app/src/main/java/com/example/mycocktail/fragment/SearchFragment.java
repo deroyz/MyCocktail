@@ -12,17 +12,17 @@ import androidx.fragment.app.Fragment;
 
 import com.example.mycocktail.R;
 
-public class LatestFragment extends Fragment {
+public class SearchFragment extends Fragment {
 
-    private static final String LOG_TAG = LatestFragment.class.getSimpleName();
+    private static final String LOG_TAG = SearchFragment.class.getSimpleName();
 
     private View view;
 
-    public static LatestFragment newInstance(){
+    public static SearchFragment newInstance(){
 
-        LatestFragment latestFragment = new LatestFragment();
+        SearchFragment searchFragment = new SearchFragment();
 
-        return latestFragment;
+        return searchFragment;
 
     }
 
@@ -32,7 +32,7 @@ public class LatestFragment extends Fragment {
 
         Log.e(LOG_TAG, "onCreateView");
 
-        view = inflater.inflate(R.layout.fragment_latest, container, false);
+        view = inflater.inflate(R.layout.fragment_all, container, false);
 
         return view;
 
