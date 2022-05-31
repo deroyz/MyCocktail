@@ -144,4 +144,19 @@ public class TodaysFragment extends Fragment implements DrinkAdapter.DrinkAdapte
     public void onItemClickListener(int itemId) {
 
     }
+
+    @Override
+    public void recipeOnclick(View v, int position) {
+
+    }
+
+    @Override
+    public void addLogOnClick(View v, int position) {
+
+    }
+
+    @Override
+    public void favoriteOnClick(View v, int position) {
+
+    }
 }

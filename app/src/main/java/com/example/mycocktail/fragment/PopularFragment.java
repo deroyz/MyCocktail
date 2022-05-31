@@ -1,6 +1,7 @@
 package com.example.mycocktail.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mycocktail.R;
+import com.example.mycocktail.activity.AddLogActivity;
 import com.example.mycocktail.adapter.DrinkAdapter;
 import com.example.mycocktail.network.RetrofitClient;
 import com.example.mycocktail.network.RetrofitInterface;
@@ -21,6 +23,8 @@ import com.example.mycocktail.network.datamodel.Drink;
 import com.example.mycocktail.network.datamodel.DrinksResult;
 
 import java.util.List;
+
+import javax.xml.namespace.QName;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -140,9 +144,37 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
 
     }
 
-
     @Override
     public void onItemClickListener(int itemId) {
+
+    }
+
+    @Override
+    public void recipeOnclick(View v, int position) {
+
+        String name = mDrinks.get(position).getStrDrink();
+        String imageUrl = mDrinks.get(position).getStrDrinkThumb();
+
+        Log.e(LOG_TAG, imageUrl);
+        Log.e(LOG_TAG, name);
+
+    }
+
+    @Override
+    public void addLogOnClick(View v, int position) {
+
+        String name = mDrinks.get(position).getStrDrink();
+        String imageUrl = mDrinks.get(position).getStrDrinkThumb();
+
+        Intent intent = new Intent(this.getActivity(), AddLogActivity.class);
+        intent.putExtra("name", name);
+        intent.putExtra("imageUrl", imageUrl);
+
+        startActivity(intent);
+    }
+
+    @Override
+    public void favoriteOnClick(View v, int position) {
 
     }
 }

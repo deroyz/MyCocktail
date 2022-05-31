@@ -117,6 +117,10 @@ public class AddLogActivity extends AppCompatActivity {
         // Existing Log Update Mode
         Intent intent = getIntent();
 
+        if (intent != null && intent.hasExtra("name")){
+
+        }
+
         if (intent != null && intent.hasExtra(EXTRA_LOG_ID)) {
 
             mAddButton.setText(R.string.update_button);

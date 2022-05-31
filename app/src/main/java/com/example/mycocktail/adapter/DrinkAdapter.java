@@ -2,6 +2,7 @@ package com.example.mycocktail.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,7 +87,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
         private TextView cocktailName;
         private ImageView cocktailImage;
         private Button recipeButton;
-        private Button logButton;
+        private Button addLogButton;
         private CheckBox favoriteButton;
 
 
@@ -96,10 +97,36 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
             cocktailName = itemView.findViewById(R.id.tv_drink_cocktailName);
             cocktailImage = itemView.findViewById(R.id.iv_drink_cocktail);
             recipeButton = itemView.findViewById(R.id.btn_get_recipe);
-            logButton = itemView.findViewById(R.id.btn_add_to_log);
+            addLogButton = itemView.findViewById(R.id.btn_add_to_log);
             favoriteButton = itemView.findViewById(R.id.btn_favorite);
 
-            itemView.setOnClickListener(this);
+            addLogButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mDrinkAdapterListener.addLogOnClick(view, getBindingAdapterPosition());
+                    Log.e(LOG_TAG, "onAddLogClick");
+                }
+            });
+
+            recipeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mDrinkAdapterListener.recipeOnclick(view, getBindingAdapterPosition());
+                    Log.e(LOG_TAG, "onRecipeClick");
+                }
+            });
+
+            favoriteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mDrinkAdapterListener.favoriteOnClick(view, getBindingAdapterPosition());
+                    Log.e(LOG_TAG, "onFavoriteClick");
+                }
+            });
+
+
+
+           // itemView.setOnClickListener(this);
 
         }
 
@@ -109,6 +136,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
             int elementId = Integer.parseInt(mDrinks.get(getBindingAdapterPosition()).getIdDrink());
             mDrinkAdapterListener.onItemClickListener(elementId);
 
+
         }
 
     }
@@ -116,6 +144,13 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
     public interface DrinkAdapterListener {
 
         void onItemClickListener(int itemId);
+
+        void recipeOnclick (View v, int position);
+
+        void addLogOnClick (View v, int position);
+
+        void favoriteOnClick (View v, int position);
+
 
     }
 
