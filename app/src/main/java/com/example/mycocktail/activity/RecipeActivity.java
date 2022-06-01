@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.example.mycocktail.R;
 
-public class DetailActivity extends AppCompatActivity {
+public class RecipeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -57,7 +57,7 @@
             android:name=".activity.AddLogActivity"
             android:label="add_log_activity" />
         <activity
-            android:name=".activity.DetailActivity"
+            android:name=".activity.RecipeActivity"
             android:label="detail_activity" />
         <activity
             android:name=".activity.GoogleMapsActivity"

@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.mycocktail.fragment.MyLogFragment;
 import com.example.mycocktail.fragment.FavoriteFragment;
-import com.example.mycocktail.fragment.SearchFragment;
+import com.example.mycocktail.fragment.AllFragment;
 import com.example.mycocktail.fragment.PopularFragment;
 import com.example.mycocktail.fragment.TodaysFragment;
 
@@ -25,7 +25,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return SearchFragment.newInstance();
+                return AllFragment.newInstance();
             case 1:
                 return MyLogFragment.newInstance();
             case 2:
@@ -55,11 +55,11 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return "MYLOG";
             case 2:
-                return "POPULAR";
+                return "HOT";
             case 3:
-                return "TODAYS";
+                return "RANDOM";
             case 4:
-                return "FAVORITE";
+                return "STAR";
             default:
                 return null;
         }
