@@ -24,8 +24,6 @@ import com.example.mycocktail.network.datamodel.DrinksResult;
 
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

@@ -1,21 +1,18 @@
-package com.example.mycocktail.fragment;
+package com.example.mycocktail.activity;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mycocktail.R;
-import com.example.mycocktail.activity.AddLogActivity;
 import com.example.mycocktail.adapter.DrinkAdapter;
 import com.example.mycocktail.network.RetrofitClient;
 import com.example.mycocktail.network.RetrofitInterface;
@@ -24,95 +21,67 @@ import com.example.mycocktail.network.datamodel.DrinksResult;
 
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AllFragment extends Fragment implements DrinkAdapter.DrinkAdapterListener {
+public class SearchActivity extends AppCompatActivity implements DrinkAdapter.DrinkAdapterListener {
 
-    private static final String LOG_TAG = AllFragment.class.getSimpleName();
-
-    private View mView;
+    private static final String LOG_TAG = SearchActivity.class.getSimpleName();
 
     private RecyclerView mRecyclerView;
-
-
     private DrinkAdapter mDrinkAdapter;
-
-
-
-
 
     private RetrofitClient mRetrofitClient;
     private RetrofitInterface mRetrofitInterface;
 
     private List<Drink> mDrinks;
     private Context mContext;
+    private String mSearchQuery;
 
-    public static AllFragment newInstance() {
-
-        AllFragment allFragment = new AllFragment();
-
-        return allFragment;
-
-    }
+    private ActionBar mActionBar;
+    private  int drinksCount;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search);
+
         Log.e(LOG_TAG, "onCreate");
 
-        super.onCreate(savedInstanceState);
+        mActionBar = getActionBar();
 
-        setupNetwork();
+        Intent intent = getIntent();
 
-    }
+        if (intent.hasExtra("searchQuery")) {
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            mSearchQuery = intent.getStringExtra("searchQuery");
 
-        Log.e(LOG_TAG, "onCreateView");
+            Log.e(LOG_TAG, mSearchQuery);
 
-        mView = inflater.inflate(R.layout.fragment_all, container, false);
+            setupNetwork(mSearchQuery);
+        }
 
         setupUi();
-
-        return mView;
-
     }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
-        Log.e(LOG_TAG, "onViewCreated");
-
-        super.onViewCreated(view, savedInstanceState);
-
-    }
-
 
     private void setupUi() {
 
         Log.e(LOG_TAG, "setupUi");
 
-        mRecyclerView = mView.findViewById(R.id.rv_popular_drinks);
+        mRecyclerView = findViewById(R.id.rv_search_drinks);
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         mRecyclerView.setHasFixedSize(true);
 
-
-
-
-        mDrinkAdapter = new DrinkAdapter(mDrinks, this, mContext, getActivity());
+        mDrinkAdapter = new DrinkAdapter(mDrinks, this, mContext, this);
 
         mRecyclerView.setAdapter(mDrinkAdapter);
 
     }
 
-    private void setupNetwork() {
+    private void setupNetwork(String searchQuery) {
 
         if (mDrinks != null) {
             mDrinks = null;
@@ -122,7 +91,7 @@ public class AllFragment extends Fragment implements DrinkAdapter.DrinkAdapterLi
 
         Log.e(LOG_TAG, "Network Connection Attempt");
 
-        mRetrofitInterface.getPopularDrinks().enqueue(new Callback<DrinksResult>() {
+        mRetrofitInterface.getSearchDrinks(searchQuery).enqueue(new Callback<DrinksResult>() {
 
             @Override
             public void onResponse(Call<DrinksResult> call, Response<DrinksResult> response) {
@@ -176,7 +145,7 @@ public class AllFragment extends Fragment implements DrinkAdapter.DrinkAdapterLi
         String name = mDrinks.get(position).getStrDrink();
         String imageUrl = mDrinks.get(position).getStrDrinkThumb();
 
-        Intent intent = new Intent(this.getActivity(), AddLogActivity.class);
+        Intent intent = new Intent(this, AddLogActivity.class);
         intent.putExtra("name", name);
         intent.putExtra("imageUrl", imageUrl);
 

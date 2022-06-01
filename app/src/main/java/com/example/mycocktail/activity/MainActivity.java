@@ -4,10 +4,16 @@ package com.example.mycocktail.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 
+import androidx.appcompat.widget.SearchView;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.mycocktail.R;
@@ -31,6 +37,40 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setElevation(0f);
 
         setupViewPager();
+        setupUi();
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
+
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
+        searchView.setQueryHint("Search by Name and Ingredient");
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                intent.putExtra("searchQuery", query);
+                Log.e(LOG_TAG, query);
+                startActivity(intent);
+                Log.e(LOG_TAG, query);
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return true;
+            }
+        });
+        return true;
+    }
+
+
+    private void setupUi() {
 
         FloatingActionButton fabAddLogs = findViewById(R.id.fab_add_logs);
 
@@ -41,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(addLogsIntent);
             }
         });
-
     }
 
     private void setupViewPager() {

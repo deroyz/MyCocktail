@@ -124,6 +124,7 @@ public class AddLogActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra(EXTRA_LOG_ID)) {
 
             mAddButton.setText(R.string.update_button);
+            getSupportActionBar().setTitle("UPDATING LOG");
 
             if (mLogId == DEFAULT_LOG_ID) {
 

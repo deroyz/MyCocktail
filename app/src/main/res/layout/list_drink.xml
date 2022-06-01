@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/iv_drink_cocktail"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_margin="16dp" />
 
         <LinearLayout
@@ -61,5 +61,10 @@
         android:layout_marginLeft="16dp"
         android:textSize="24dp"
         tools:text="Martini" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
 
 </LinearLayout>

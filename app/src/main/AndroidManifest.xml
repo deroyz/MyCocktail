@@ -54,8 +54,12 @@
         </activity>
 
         <activity
+            android:name=".activity.SearchActivity"
+            android:label="SEARCH RESULT" />
+
+        <activity
             android:name=".activity.AddLogActivity"
-            android:label="add_log_activity" />
+            android:label="ADD LOG" />
         <activity
             android:name=".activity.RecipeActivity"
             android:label="detail_activity" />
