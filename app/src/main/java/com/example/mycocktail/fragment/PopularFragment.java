@@ -158,12 +158,16 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
 
     @Override
     public void recipeOnclick(View v, int position) {
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
 
-        String name = mDrinks.get(position).getStrDrink();
-        String imageUrl = mDrinks.get(position).getStrDrinkThumb();
+            @Override
+            public void run() {
 
-        Log.e(LOG_TAG, imageUrl);
-        Log.e(LOG_TAG, name);
+               favoriteDatabase.favoriteDao().deleteAllFavorite();
+
+
+            }
+        });
 
     }
 
@@ -195,7 +199,7 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
         Log.e(LOG_TAG, favoriteName);
         Log.e(LOG_TAG, favoriteImageUrl);
 
-        FavoriteEntry favoriteCheck = favoriteDatabase.favoriteDao().loadFavoriteById(favoriteId).getValue();
+        FavoriteEntry favoriteCheck = favoriteDatabase.favoriteDao().loadFavoriteById(favoriteId);
 
         favoriteEntry = new FavoriteEntry(favoriteId, favoriteName, favoriteImageUrl);
 
@@ -207,13 +211,13 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
                 if (favoriteCheck == null) {
                     Log.e(LOG_TAG, "Data input in favoriteDatabase");
                     favoriteDatabase.favoriteDao().insertFavorite(favoriteEntry);
+                }
 
-                } else {
+                if (favoriteCheck != null)
                     Log.e(LOG_TAG, "Data delete from favoriteDatabase");
                     favoriteDatabase.favoriteDao().deleteByDrinkId(favoriteId);
                 }
 
-            }
         });
 
     }
