@@ -11,12 +11,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mycocktail.AppExecutors;
 import com.example.mycocktail.R;
 import com.example.mycocktail.activity.AddLogActivity;
 import com.example.mycocktail.adapter.DrinkAdapter;
+import com.example.mycocktail.data.FavoriteDatabase;
+import com.example.mycocktail.data.FavoriteEntry;
 import com.example.mycocktail.network.RetrofitClient;
 import com.example.mycocktail.network.RetrofitInterface;
 import com.example.mycocktail.network.datamodel.Drink;
@@ -43,6 +47,9 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
     private List<Drink> mDrinks;
     private Context mContext;
 
+    FavoriteDatabase favoriteDatabase;
+    FavoriteEntry favoriteEntry;
+
     public static PopularFragment newInstance() {
 
         PopularFragment popularFragment = new PopularFragment();
@@ -57,6 +64,8 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
         Log.e(LOG_TAG, "onCreate");
 
         super.onCreate(savedInstanceState);
+
+        favoriteDatabase = FavoriteDatabase.getInstance(getContext());
 
         setupNetwork();
 
@@ -164,15 +173,50 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
         String name = mDrinks.get(position).getStrDrink();
         String imageUrl = mDrinks.get(position).getStrDrinkThumb();
 
+        Log.e(LOG_TAG, imageUrl);
+        Log.e(LOG_TAG, name);
+
         Intent intent = new Intent(this.getActivity(), AddLogActivity.class);
         intent.putExtra("name", name);
         intent.putExtra("imageUrl", imageUrl);
 
         startActivity(intent);
+
     }
 
     @Override
     public void favoriteOnClick(View v, int position) {
 
+        String favoriteId = mDrinks.get(position).getIdDrink();
+        String favoriteName = mDrinks.get(position).getStrDrink();
+        String favoriteImageUrl = mDrinks.get(position).getStrDrinkThumb();
+
+        Log.e(LOG_TAG, favoriteId);
+        Log.e(LOG_TAG, favoriteName);
+        Log.e(LOG_TAG, favoriteImageUrl);
+
+        FavoriteEntry favoriteCheck = favoriteDatabase.favoriteDao().loadFavoriteById(favoriteId).getValue();
+
+        favoriteEntry = new FavoriteEntry(favoriteId, favoriteName, favoriteImageUrl);
+
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+
+            @Override
+            public void run() {
+
+                if (favoriteCheck == null) {
+                    Log.e(LOG_TAG, "Data input in favoriteDatabase");
+                    favoriteDatabase.favoriteDao().insertFavorite(favoriteEntry);
+
+                } else {
+                    Log.e(LOG_TAG, "Data delete from favoriteDatabase");
+                    favoriteDatabase.favoriteDao().deleteByDrinkId(favoriteId);
+                }
+
+            }
+        });
+
     }
+
 }
+

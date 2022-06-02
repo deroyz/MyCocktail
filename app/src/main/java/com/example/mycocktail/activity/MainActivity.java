@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         Log.e(LOG_TAG, "onCreate");
 
         setContentView(R.layout.activity_main);
+
         getSupportActionBar().setElevation(0f);
 
         setupViewPager();

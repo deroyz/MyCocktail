@@ -107,13 +107,10 @@ public class MyLogFragment extends Fragment implements LogAdapter.LogItemClickLi
 
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        int position = viewHolder.getAdapterPosition();
-                        List<LogEntry> logs = mLogAdapter.getLogs();
-                        mLogDatabase.logDao().deleteLog(logs.get(position));
-                    }
+                AppExecutors.getInstance().diskIO().execute(() -> {
+                    int position = viewHolder.getAdapterPosition();
+                    List<LogEntry> logs = mLogAdapter.getLogs();
+                    mLogDatabase.logDao().deleteLog(logs.get(position));
                 });
             }
         }).attachToRecyclerView(mRecyclerView);

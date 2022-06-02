@@ -23,7 +23,7 @@ import java.util.List;
 
 public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHolder> {
 
-    private static final String LOG_TAG = LogAdapter.class.getSimpleName();
+    private static final String LOG_TAG = DrinkAdapter.class.getSimpleName();
 
     private List<Drink> mDrinks;
     private DrinkAdapterListener mDrinkAdapterListener;

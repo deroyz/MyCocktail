@@ -17,4 +17,7 @@ public interface RetrofitInterface  {
     @GET("api/json/v2/9973533/search.php?")
     Call<DrinksResult> getSearchDrinks (@Query("s") String cocktailName);
 
+    @GET("api/json/v2/9973533/lookup.php?")
+    Call<DrinksResult> getDrinkById (@Query("iid") String cocktailId);
+
 }

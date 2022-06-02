@@ -30,6 +30,7 @@ public abstract class LogDatabase extends RoomDatabase {
 
                 sInstance = Room.databaseBuilder(context.getApplicationContext(),
                                 LogDatabase.class, LogDatabase.DATABASE_NAME)
+                        .fallbackToDestructiveMigration()
                         .build();
 
             }

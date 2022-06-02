@@ -67,7 +67,7 @@ public class AddLogActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE = 101;
 
-    private static boolean CHECK_CAMERA_PERMISSION = false;
+    private static  boolean CHECK_CAMERA_PERMISSION = false;
     private static final boolean CAMERA_PERMISSION_GRANTED = true;
     private static final boolean CAMERA_PERMISSION_DENIED = false;
 
@@ -79,14 +79,13 @@ public class AddLogActivity extends AppCompatActivity {
 
     private int mLogId = DEFAULT_LOG_ID;
 
-    EditText mEditTextName;
-    EditText mEditTextPrice;
-    EditText mEditTextComment;
-    EditText mEditTextPlace;
-
-    RatingBar mRatingBar;
-    ImageView mImageViewPhoto;
-    Button mAddButton;
+    private EditText mEditTextName;
+    private EditText mEditTextPrice;
+    private EditText mEditTextComment;
+    private EditText mEditTextPlace;
+    private RatingBar mRatingBar;
+    private ImageView mImageViewPhoto;
+    private Button mAddButton;
 
     private String mCurrentPhotoPath;
     private LogDatabase mLogDatabase;
@@ -109,34 +108,45 @@ public class AddLogActivity extends AppCompatActivity {
         // Create instance of log database
         mLogDatabase = LogDatabase.getInstance(getApplicationContext());
 
-        // Initial Input Add Mode
+        // Getting intent coming from a different activity
+        Intent intent = getIntent();
+
+        // 1. Default blank input
         if (savedInstanceState != null && savedInstanceState.containsKey(INSTANCE_LOG_ID)) {
             mLogId = savedInstanceState.getInt(INSTANCE_LOG_ID, DEFAULT_LOG_ID);
         }
 
-        // Existing Log Update Mode
-        Intent intent = getIntent();
+        // 2. Add a log with a selected cocktail (Image and name provided)
+        if (intent != null && intent.hasExtra("name")) {
 
-        if (intent != null && intent.hasExtra("name")){
+            String selectedCocktailName = intent.getStringExtra("name");
+            String selectedCocktailImageUrl = intent.getStringExtra("imageUrl");
+
+            PopulateUI2(selectedCocktailName, selectedCocktailImageUrl);
 
         }
 
+        // 3. Setup AddLogActivity for updating
         if (intent != null && intent.hasExtra(EXTRA_LOG_ID)) {
 
+            //Updating UI in AddLogActivity (Button and AppBar label)
             mAddButton.setText(R.string.update_button);
             getSupportActionBar().setTitle("UPDATING LOG");
 
+            //Check
             if (mLogId == DEFAULT_LOG_ID) {
 
-                //Receives Log ID
+                // Receives selected Log ID from intent from MyLog Fragment
                 mLogId = intent.getIntExtra(EXTRA_LOG_ID, DEFAULT_LOG_ID);
 
-                //Create viewModel instance
+                // Create viewModel factory instance using LogDatabase instance and obtained LogId
                 AddLogViewModelFactory factory = new AddLogViewModelFactory(mLogDatabase, mLogId);
 
+                // Implement new ViewModel in this activity using factory
                 mViewModel = new ViewModelProvider(
                         this, (ViewModelProvider.Factory) factory).get(AddLogViewModel.class);
 
+                // Setup observer observing LogEntry
                 mViewModel.getLog().observe(this, new Observer<LogEntry>() {
 
                     @Override
@@ -150,6 +160,36 @@ public class AddLogActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    // Populate Ui with received LogEntry from MyLogFragment intent
+    private void populateUI(LogEntry log) {
+
+        //  If entered log is empty return null
+        if (log == null) {
+            return;
+        }
+
+        mCurrentPhotoPath = log.getPhotoPath();
+        Glide.with(this)
+                .load(mCurrentPhotoPath)
+                .into(mImageViewPhoto);
+
+        mEditTextName.setText(log.getName());
+        mEditTextComment.setText(log.getComment());
+        mEditTextPrice.setText("" + log.getPrice());
+        mRatingBar.setRating(log.getRating());
+
+    }
+
+    // Populate Ui with received a cocktail name and image from different drink list fragments
+    private void PopulateUI2(String selectedCocktailName, String selectedCocktailImageUrl) {
+        mCurrentPhotoPath = selectedCocktailImageUrl;
+        Glide.with(this)
+                .load(mCurrentPhotoPath)
+                .into(mImageViewPhoto);
+
+        mEditTextName.setText(selectedCocktailName);
     }
 
     private void initViews() {
@@ -199,13 +239,18 @@ public class AddLogActivity extends AppCompatActivity {
 
     private void onAddButtonClicked() {
 
-        String name = mEditTextName.getText().toString();
+        String name;
         Date date = new Date();
-        String comment = mEditTextComment.getText().toString();
-        float rating = mRatingBar.getRating();
-        double price = Double.parseDouble(mEditTextPrice.getText().toString());
-        String photoPath = mCurrentPhotoPath;
+        String comment;
+        float rating;
+        double price;
+        String photoPath;
 
+        name = mEditTextName.getText().toString();
+        comment = mEditTextComment.getText().toString();
+        rating = mRatingBar.getRating();
+        price = Double.parseDouble(mEditTextPrice.getText().toString());
+        photoPath = mCurrentPhotoPath;
 
         final LogEntry log = new LogEntry(name, comment, price, rating, date, photoPath);
 
@@ -230,10 +275,10 @@ public class AddLogActivity extends AppCompatActivity {
         Log.e(LOG_TAG, "onPhotoTakeButtonClicked");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Cocktail Picture");
-        builder.setMessage("How ");
+        builder.setTitle("Need a new cocktail picture for this cocktail?");
+        builder.setMessage("Choose how");
 
-        builder.setPositiveButton("Take Photo", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Take photo", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Log.e(LOG_TAG, "onPhotoTakeButtonClicked" + " /Take Photo Clicked");
@@ -351,8 +396,6 @@ public class AddLogActivity extends AppCompatActivity {
                             Log.e(LOG_TAG, selectedPlaceId);
 
 
-
-
                         }
                     }
                 });
@@ -369,8 +412,6 @@ public class AddLogActivity extends AppCompatActivity {
                     && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
                 Log.e(LOG_TAG, LOG_MSG_PERMISSION_GRANTED);
-
-                CHECK_CAMERA_PERMISSION = CAMERA_PERMISSION_GRANTED;
 
             } else {
 
@@ -447,6 +488,7 @@ public class AddLogActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         switch (requestCode) {
+
             case REQUEST_TAKE_PHOTO:
                 if (resultCode == RESULT_OK) {
 
@@ -511,25 +553,11 @@ public class AddLogActivity extends AppCompatActivity {
         }
     }
 
-    private void populateUI(LogEntry log) {
-        if (log == null) {
-            return;
-        }
-
-        mCurrentPhotoPath = log.getPhotoPath();
-        Glide.with(this)
-                .load(mCurrentPhotoPath)
-                .into(mImageViewPhoto);
-
-        mEditTextName.setText(log.getName());
-        mEditTextComment.setText(log.getComment());
-        mEditTextPrice.setText("" + log.getPrice());
-        mRatingBar.setRating(log.getRating());
-    }
-
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
+
         outState.putInt(INSTANCE_LOG_ID, mLogId);
         super.onSaveInstanceState(outState);
+
     }
 }
