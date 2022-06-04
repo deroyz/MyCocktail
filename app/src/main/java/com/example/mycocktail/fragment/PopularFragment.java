@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +27,7 @@ import com.example.mycocktail.network.RetrofitClient;
 import com.example.mycocktail.network.RetrofitInterface;
 import com.example.mycocktail.network.datamodel.Drink;
 import com.example.mycocktail.network.datamodel.DrinksResult;
+import com.example.mycocktail.viewmodel.FavoriteViewModel;
 
 import java.util.List;
 
@@ -49,6 +52,7 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
 
     FavoriteDatabase favoriteDatabase;
     FavoriteEntry favoriteEntry;
+    private List<FavoriteEntry> mFavoriteEntries;
 
     public static PopularFragment newInstance() {
 
@@ -66,7 +70,6 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
         super.onCreate(savedInstanceState);
 
         favoriteDatabase = FavoriteDatabase.getInstance(getContext());
-
         setupNetwork();
 
     }
@@ -79,8 +82,6 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
 
         mView = inflater.inflate(R.layout.fragment_popular, container, false);
 
-        setupUi();
-
         return mView;
 
     }
@@ -91,6 +92,9 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
         Log.e(LOG_TAG, "onViewCreated");
 
         super.onViewCreated(view, savedInstanceState);
+
+        setupUi();
+        setupFavoriteViewModel();
 
     }
 
@@ -104,7 +108,7 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
         mRecyclerView.setHasFixedSize(true);
 
-        mDrinkAdapter = new DrinkAdapter(mDrinks, this, mContext, getActivity());
+        mDrinkAdapter = new DrinkAdapter(mDrinks, mFavoriteEntries, this, mContext, getActivity());
         mRecyclerView.setAdapter(mDrinkAdapter);
 
     }
@@ -151,6 +155,27 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
 
     }
 
+    private void setupFavoriteViewModel() {
+
+        FavoriteViewModel favoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
+
+        Log.e(LOG_TAG, "Creating instance of FavoriteViewModel");
+
+        favoriteViewModel.onCreate(favoriteDatabase);
+
+        favoriteViewModel.getFavoriteList().observe(getViewLifecycleOwner(), new Observer<List<FavoriteEntry>>() {
+
+            @Override
+            public void onChanged(@Nullable List<FavoriteEntry> favoriteEntries) {
+
+                Log.e(LOG_TAG, "Updating list of favorite drinks from LiveData in ViewModel");
+
+                mDrinkAdapter.setFavoriteEntries(favoriteEntries);
+
+            }
+        });
+    }
+
     @Override
     public void onItemClickListener(int itemId) {
 
@@ -163,7 +188,7 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
             @Override
             public void run() {
 
-               favoriteDatabase.favoriteDao().deleteAllFavorite();
+                favoriteDatabase.favoriteDao().deleteAllFavorite();
 
 
             }
@@ -191,6 +216,8 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
     @Override
     public void favoriteOnClick(View v, int position) {
 
+        int a = 1;
+
         String favoriteId = mDrinks.get(position).getIdDrink();
         String favoriteName = mDrinks.get(position).getStrDrink();
         String favoriteImageUrl = mDrinks.get(position).getStrDrinkThumb();
@@ -199,28 +226,22 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
         Log.e(LOG_TAG, favoriteName);
         Log.e(LOG_TAG, favoriteImageUrl);
 
-        FavoriteEntry favoriteCheck = favoriteDatabase.favoriteDao().loadFavoriteById(favoriteId);
+        if (a == 1) ;
+        {
+            favoriteEntry = new FavoriteEntry(favoriteId, favoriteName, favoriteImageUrl);
 
-        favoriteEntry = new FavoriteEntry(favoriteId, favoriteName, favoriteImageUrl);
+            AppExecutors.getInstance().diskIO().execute(new Runnable() {
 
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
 
-            @Override
-            public void run() {
-
-                if (favoriteCheck == null) {
                     Log.e(LOG_TAG, "Data input in favoriteDatabase");
                     favoriteDatabase.favoriteDao().insertFavorite(favoriteEntry);
+
                 }
 
-                if (favoriteCheck != null)
-                    Log.e(LOG_TAG, "Data delete from favoriteDatabase");
-                    favoriteDatabase.favoriteDao().deleteByDrinkId(favoriteId);
-                }
-
-        });
-
+            });
+        }
     }
-
 }
 

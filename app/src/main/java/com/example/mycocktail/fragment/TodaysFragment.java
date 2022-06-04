@@ -11,16 +11,21 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mycocktail.R;
 import com.example.mycocktail.activity.AddLogActivity;
 import com.example.mycocktail.adapter.DrinkAdapter;
+import com.example.mycocktail.data.FavoriteDatabase;
+import com.example.mycocktail.data.FavoriteEntry;
 import com.example.mycocktail.network.RetrofitClient;
 import com.example.mycocktail.network.RetrofitInterface;
 import com.example.mycocktail.network.datamodel.Drink;
 import com.example.mycocktail.network.datamodel.DrinksResult;
+import com.example.mycocktail.viewmodel.FavoriteViewModel;
 
 import java.util.List;
 
@@ -43,6 +48,10 @@ public class TodaysFragment extends Fragment implements DrinkAdapter.DrinkAdapte
     private List<Drink> mDrinks;
     private Context mContext;
 
+    FavoriteDatabase favoriteDatabase;
+    FavoriteEntry favoriteEntry;
+    private List<FavoriteEntry> mFavoriteEntries;
+
     public static TodaysFragment newInstance() {
 
         TodaysFragment todaysFragment = new TodaysFragment();
@@ -59,6 +68,7 @@ public class TodaysFragment extends Fragment implements DrinkAdapter.DrinkAdapte
         super.onCreate(savedInstanceState);
 
         setupNetwork();
+        favoriteDatabase = FavoriteDatabase.getInstance(getContext());
 
     }
 
@@ -83,6 +93,9 @@ public class TodaysFragment extends Fragment implements DrinkAdapter.DrinkAdapte
 
         super.onViewCreated(view, savedInstanceState);
 
+        setupUi();
+        setupFavoriteViewModel();
+
     }
 
 
@@ -95,7 +108,7 @@ public class TodaysFragment extends Fragment implements DrinkAdapter.DrinkAdapte
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
         mRecyclerView.setHasFixedSize(true);
 
-        mDrinkAdapter = new DrinkAdapter(mDrinks, this, mContext, getActivity());
+        mDrinkAdapter = new DrinkAdapter(mDrinks, mFavoriteEntries,this, mContext, getActivity());
         mRecyclerView.setAdapter(mDrinkAdapter);
 
     }
@@ -139,6 +152,27 @@ public class TodaysFragment extends Fragment implements DrinkAdapter.DrinkAdapte
         });
 
 
+    }
+
+    private void setupFavoriteViewModel() {
+
+        FavoriteViewModel favoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
+
+        Log.e(LOG_TAG, "Creating instance of FavoriteViewModel");
+
+        favoriteViewModel.onCreate(favoriteDatabase);
+
+        favoriteViewModel.getFavoriteList().observe(getViewLifecycleOwner(), new Observer<List<FavoriteEntry>>() {
+
+            @Override
+            public void onChanged(@Nullable List<FavoriteEntry> favoriteEntries) {
+
+                Log.e(LOG_TAG, "Updating list of favorite drinks from LiveData in ViewModel");
+
+                mDrinkAdapter.setFavoriteEntries(favoriteEntries);
+
+            }
+        });
     }
 
 

@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mycocktail.R;
+import com.example.mycocktail.data.FavoriteEntry;
 import com.example.mycocktail.network.datamodel.Drink;
 
 import java.util.List;
@@ -26,12 +27,14 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
     private static final String LOG_TAG = DrinkAdapter.class.getSimpleName();
 
     private List<Drink> mDrinks;
+    private List<FavoriteEntry> mFavoriteEntries;
     private DrinkAdapterListener mDrinkAdapterListener;
     private Context mContext;
     private Activity mActivity;
 
-    public DrinkAdapter(List<Drink> drinks, DrinkAdapterListener drinkAdapterListener, Context context, FragmentActivity activity) {
+    public DrinkAdapter(List<Drink> drinks, List<FavoriteEntry> favoriteEntries, DrinkAdapterListener drinkAdapterListener, Context context, FragmentActivity activity) {
 
+        this.mFavoriteEntries = favoriteEntries;
         this.mDrinks = drinks;
         this.mDrinkAdapterListener = drinkAdapterListener;
         this.mContext = context;
@@ -39,9 +42,25 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
 
     }
 
-    public void setDrinks(List<Drink> mDrinks) {
-        this.mDrinks = mDrinks;
+    public DrinkAdapter(List<FavoriteEntry> favoriteEntries, DrinkAdapterListener drinkAdapterListener) {
+
+        this.mFavoriteEntries = favoriteEntries;
+        this.mDrinkAdapterListener = drinkAdapterListener;
+
+    }
+
+    public void setDrinks(List<Drink> drinks) {
+
+        this.mDrinks = drinks;
         notifyDataSetChanged();
+
+    }
+
+    public void setFavoriteEntries(List<FavoriteEntry> favoriteEntries) {
+
+        this.mFavoriteEntries = favoriteEntries;
+        notifyDataSetChanged();
+
     }
 
     @NonNull
@@ -58,27 +77,64 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
     @Override
     public void onBindViewHolder(@NonNull DrinkViewHolder holder, int position) {
 
-        final Drink drink = mDrinks.get(position);
+        if (mDrinks != null) {
 
-        String cocktailName = drink.getStrDrink();
-        String imageUrl = drink.getStrDrinkThumb();
+            final Drink drink = mDrinks.get(position);
 
-        holder.cocktailName.setText(cocktailName);
+            for(int i= 0; )
+            final FavoriteEntry favoriteEntry = mFavoriteEntries.get(position);
 
-        Glide.with(holder.itemView)
-                .load(imageUrl)
-                .into(holder.cocktailImage);
+
+
+            String cocktailName = drink.getStrDrink();
+            String imageUrl = drink.getStrDrinkThumb();
+            String cocktailId = drink.getIdDrink();
+
+            holder.cocktailName.setText(cocktailName);
+
+            Glide.with(holder.itemView)
+                    .load(imageUrl)
+                    .into(holder.cocktailImage);
+
+
+
+        } else if (mFavoriteEntries != null) {
+
+            final FavoriteEntry favoriteEntry = mFavoriteEntries.get(position);
+
+            String cocktailName = favoriteEntry.getStrDrink();
+            String imageUrl = favoriteEntry.getStrDrinkThumb();
+
+            holder.cocktailName.setText(cocktailName);
+
+            Glide.with(holder.itemView)
+                    .load(imageUrl)
+                    .into(holder.cocktailImage);
+
+        }
 
     }
 
     @Override
     public int getItemCount() {
 
-        if (mDrinks == null) {
+        int itemCount = 0;
+
+        if (mDrinks == null && mFavoriteEntries == null) {
+
             return 0;
+
+        } else if (mDrinks != null) {
+
+            itemCount = mDrinks.size();
+
+        } else if (mFavoriteEntries != null) {
+
+            itemCount = mFavoriteEntries.size();
+
         }
 
-        return mDrinks.size();
+        return itemCount;
 
     }
 
@@ -125,8 +181,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
             });
 
 
-
-           // itemView.setOnClickListener(this);
+            // itemView.setOnClickListener(this);
 
         }
 
@@ -145,11 +200,11 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
 
         void onItemClickListener(int itemId);
 
-        void recipeOnclick (View v, int position);
+        void recipeOnclick(View v, int position);
 
-        void addLogOnClick (View v, int position);
+        void addLogOnClick(View v, int position);
 
-        void favoriteOnClick (View v, int position);
+        void favoriteOnClick(View v, int position);
 
 
     }

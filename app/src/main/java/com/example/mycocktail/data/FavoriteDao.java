@@ -23,7 +23,7 @@ public interface FavoriteDao {
     void deleteFavorite(FavoriteEntry favoriteEntry);
 
     @Query("SELECT * FROM favorite ORDER BY idDrink")
-    List<FavoriteEntry> loadAllFavorites();
+    LiveData<List<FavoriteEntry>> loadAllFavorites();
 
     @Query("SELECT * FROM favorite WHERE idDrink = :id")
     FavoriteEntry loadFavoriteById(String id);

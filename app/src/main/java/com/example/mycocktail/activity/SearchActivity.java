@@ -9,15 +9,20 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mycocktail.R;
 import com.example.mycocktail.adapter.DrinkAdapter;
+import com.example.mycocktail.data.FavoriteDatabase;
+import com.example.mycocktail.data.FavoriteEntry;
 import com.example.mycocktail.network.RetrofitClient;
 import com.example.mycocktail.network.RetrofitInterface;
 import com.example.mycocktail.network.datamodel.Drink;
 import com.example.mycocktail.network.datamodel.DrinksResult;
+import com.example.mycocktail.viewmodel.FavoriteViewModel;
 
 import java.util.List;
 
@@ -40,7 +45,11 @@ public class SearchActivity extends AppCompatActivity implements DrinkAdapter.Dr
     private String mSearchQuery;
 
     private ActionBar mActionBar;
-    private  int drinksCount;
+    private int drinksCount;
+
+    FavoriteDatabase favoriteDatabase;
+    FavoriteEntry favoriteEntry;
+    private List<FavoriteEntry> mFavoriteEntries;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,7 +72,12 @@ public class SearchActivity extends AppCompatActivity implements DrinkAdapter.Dr
             setupNetwork(mSearchQuery);
         }
 
+        favoriteDatabase = FavoriteDatabase.getInstance(this);
+
         setupUi();
+        setupFavoriteViewModel();
+
+
     }
 
     private void setupUi() {
@@ -75,7 +89,7 @@ public class SearchActivity extends AppCompatActivity implements DrinkAdapter.Dr
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         mRecyclerView.setHasFixedSize(true);
 
-        mDrinkAdapter = new DrinkAdapter(mDrinks, this, mContext, this);
+        mDrinkAdapter = new DrinkAdapter(mDrinks, mFavoriteEntries, this, mContext, this);
 
         mRecyclerView.setAdapter(mDrinkAdapter);
 
@@ -121,6 +135,27 @@ public class SearchActivity extends AppCompatActivity implements DrinkAdapter.Dr
         });
 
 
+    }
+
+    private void setupFavoriteViewModel() {
+
+        FavoriteViewModel favoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
+
+        Log.e(LOG_TAG, "Creating instance of FavoriteViewModel");
+
+        favoriteViewModel.onCreate(favoriteDatabase);
+
+        favoriteViewModel.getFavoriteList().observe(this, new Observer<List<FavoriteEntry>>() {
+
+            @Override
+            public void onChanged(@Nullable List<FavoriteEntry> favoriteEntries) {
+
+                Log.e(LOG_TAG, "Updating list of favorite drinks from LiveData in ViewModel");
+
+                mDrinkAdapter.setFavoriteEntries(favoriteEntries);
+
+            }
+        });
     }
 
     @Override

@@ -75,11 +75,13 @@ public class MyLogFragment extends Fragment implements LogAdapter.LogItemClickLi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Log.e(LOG_TAG, "onViewCreated");
+
         setupUi();
 
         setupViewModel();
 
-        Log.e(LOG_TAG, "onViewCreated");
+
 
     }
 

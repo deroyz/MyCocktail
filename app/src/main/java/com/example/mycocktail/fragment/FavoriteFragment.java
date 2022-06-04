@@ -15,7 +15,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mycocktail.AppExecutors;
 import com.example.mycocktail.R;
 import com.example.mycocktail.adapter.DrinkAdapter;
 import com.example.mycocktail.data.FavoriteDatabase;
@@ -23,6 +22,7 @@ import com.example.mycocktail.data.FavoriteEntry;
 import com.example.mycocktail.network.RetrofitClient;
 import com.example.mycocktail.network.RetrofitInterface;
 import com.example.mycocktail.network.datamodel.Drink;
+import com.example.mycocktail.viewmodel.FavoriteViewModel;
 
 import java.util.List;
 
@@ -40,6 +40,7 @@ public class FavoriteFragment extends Fragment implements DrinkAdapter.DrinkAdap
 
 
     private List<Drink> mDrinks;
+    private List<FavoriteEntry> mFavoriteEntries;
     private Context mContext;
 
     FavoriteDatabase favoriteDatabase;
@@ -62,8 +63,6 @@ public class FavoriteFragment extends Fragment implements DrinkAdapter.DrinkAdap
         mContext = getActivity().getApplicationContext();
         favoriteDatabase = FavoriteDatabase.getInstance(mContext);
 
-        setupDataModel();
-
     }
 
     @Nullable
@@ -72,84 +71,41 @@ public class FavoriteFragment extends Fragment implements DrinkAdapter.DrinkAdap
 
         Log.e(LOG_TAG, "onCreateView");
 
-        mView = inflater.inflate(R.layout.fragment_popular, container, false);
-
-        setupUi();
+        mView = inflater.inflate(R.layout.fragment_favorite, container, false);
+        mContext = mView.getContext();
 
         return mView;
 
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Log.e(LOG_TAG, "onViewCreated");
+
+        setupUi();
+        setupFavoriteViewModel();
+
+
+    }
+
     private void setupUi() {
 
-        Log.e(LOG_TAG, "setupUi");
+        Log.e(LOG_TAG, "setupUi1");
 
-        mRecyclerView = mView.findViewById(R.id.rv_popular_drinks);
+        mRecyclerView = mView.findViewById(R.id.rv_favorite_drinks);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
         mRecyclerView.setHasFixedSize(true);
 
-        mDrinkAdapter = new DrinkAdapter(mDrinks, this, mContext, getActivity());
+        mDrinkAdapter = new DrinkAdapter(mFavoriteEntries, this);
+
         mRecyclerView.setAdapter(mDrinkAdapter);
 
     }
 
-    private void setupDataModel() {
-
-        Log.e(LOG_TAG, "setupDataModel");
-
-        if (mDrinks != null) {
-            mDrinks = null;
-        }
-
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-
-            @Override
-            public void run() {
-
-                List<FavoriteEntry> favoriteEntries = favoriteDatabase.favoriteDao().loadAllFavorites();
-
-                Log.e(LOG_TAG, "setupDataModel loaded favorites successfully");
-
-                mDrinks = FavoriteConverter(favoriteEntries);
-
-
-            }
-        });
-
-        mDrinkAdapter.setDrinks(mDrinks);
-
-    }
-
-    private List<Drink> FavoriteConverter(List<FavoriteEntry> favoriteEntries) {
-
-        int favoriteSize = favoriteEntries.size();
-
-        List<Drink> drinkEntries = null;
-
-        Log.e(LOG_TAG, "Favorite data size: " + favoriteSize);
-
-        for (int i = 0; i < favoriteSize; i++) {
-
-
-            FavoriteEntry favoriteEntry = favoriteDatabase.favoriteDao().loadAllFavorites().get(i);
-            Drink drinkEntry = null;
-            drinkEntry.setStrDrink(favoriteEntry.getStrDrink());
-            drinkEntry.setStrDrinkThumb(favoriteEntry.getStrDrinkThumb());
-            drinkEntry.setIdDrink(favoriteEntry.getIdDrink());
-
-            Log.e(LOG_TAG, drinkEntry.getStrDrink());
-            Log.e(LOG_TAG, drinkEntry.getIdDrink());
-            Log.e(LOG_TAG, drinkEntry.getStrDrinkThumb());
-
-            drinkEntries.add(drinkEntry);
-        }
-
-        return drinkEntries;
-    }
-
-    /*
-    private void setupViewModel() {
+    private void setupFavoriteViewModel() {
 
         FavoriteViewModel favoriteViewModel = new ViewModelProvider(this).get(FavoriteViewModel.class);
 
@@ -164,15 +120,12 @@ public class FavoriteFragment extends Fragment implements DrinkAdapter.DrinkAdap
 
                 Log.e(LOG_TAG, "Updating list of favorite drinks from LiveData in ViewModel");
 
-               List<Drink> drinkEntries = FavoriteConverter(favoriteEntries);
-
-                mDrinkAdapter.setDrinks(drinkEntries);
+                mDrinkAdapter.setFavoriteEntries(favoriteEntries);
 
             }
         });
     }
 
-     */
 
     @Override
     public void onItemClickListener(int itemId) {
