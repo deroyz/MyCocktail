@@ -32,13 +32,12 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
     private Context mContext;
     private Activity mActivity;
 
-    public DrinkAdapter(List<Drink> drinks, List<FavoriteEntry> favoriteEntries, DrinkAdapterListener drinkAdapterListener, Context context, FragmentActivity activity) {
+    public DrinkAdapter(List<Drink> drinks, List<FavoriteEntry> favoriteEntries, DrinkAdapterListener drinkAdapterListener) {
 
         this.mFavoriteEntries = favoriteEntries;
         this.mDrinks = drinks;
         this.mDrinkAdapterListener = drinkAdapterListener;
-        this.mContext = context;
-        this.mActivity = activity;
+
 
     }
 
@@ -81,14 +80,13 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
 
             final Drink drink = mDrinks.get(position);
 
-            for(int i= 0; )
-            final FavoriteEntry favoriteEntry = mFavoriteEntries.get(position);
-
-
-
             String cocktailName = drink.getStrDrink();
             String imageUrl = drink.getStrDrinkThumb();
-            String cocktailId = drink.getIdDrink();
+
+            // Favorite check & show in CheckButton
+            if (favoriteCheck(position)) {
+                holder.favoriteButton.setChecked(true);
+            }
 
             holder.cocktailName.setText(cocktailName);
 
@@ -97,8 +95,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
                     .into(holder.cocktailImage);
 
 
-
-        } else if (mFavoriteEntries != null) {
+        } else if (mDrinks == null && mFavoriteEntries != null) {
 
             final FavoriteEntry favoriteEntry = mFavoriteEntries.get(position);
 
@@ -112,6 +109,42 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
                     .into(holder.cocktailImage);
 
         }
+
+    }
+
+    private boolean favoriteCheck(int position) {
+
+        Log.e(LOG_TAG, "favoriteChecking1");
+
+        if (mDrinks != null) {
+
+            Log.e(LOG_TAG, "favoriteChecking2");
+            final Drink drink = mDrinks.get(position);
+
+            if (mFavoriteEntries != null) {
+
+                Log.e(LOG_TAG, "favoriteChecking3");
+
+                for (int i = 0; i < mFavoriteEntries.size(); i++) {
+
+                    final FavoriteEntry favoriteEntry = mFavoriteEntries.get(i);
+
+                    if (favoriteEntry.getIdDrink() == drink.getIdDrink()) {
+
+                        Log.e(LOG_TAG, "favoriteChecking4");
+
+                        return true;
+                    }
+                }
+            }
+        } else if (mDrinks == null){
+
+            Log.e(LOG_TAG, "favoriteChecking5");
+            return true;
+
+        }
+
+        return false;
 
     }
 
@@ -175,7 +208,8 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
             favoriteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mDrinkAdapterListener.favoriteOnClick(view, getBindingAdapterPosition());
+                    boolean isFavorite = favoriteCheck(getBindingAdapterPosition());
+                    mDrinkAdapterListener.favoriteOnClick(view, getBindingAdapterPosition(), isFavorite);
                     Log.e(LOG_TAG, "onFavoriteClick");
                 }
             });
@@ -204,7 +238,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
 
         void addLogOnClick(View v, int position);
 
-        void favoriteOnClick(View v, int position);
+        void favoriteOnClick(View v, int position, boolean isFavorite);
 
 
     }

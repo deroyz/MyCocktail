@@ -23,6 +23,9 @@ public class FavoriteViewModel extends ViewModel {
 
     public LiveData<List<FavoriteEntry>> favoriteList = new MutableLiveData<List<FavoriteEntry>>();
 
+    public LiveData<FavoriteEntry> favoriteEntry = new MutableLiveData<FavoriteEntry>();
+
+
 
     public void onCreate(FavoriteDatabase mFavoriteDatabase) {
 
@@ -40,6 +43,14 @@ public class FavoriteViewModel extends ViewModel {
 
     public void setFavoriteList(LiveData<List<FavoriteEntry>> favoriteList) {
         this.favoriteList = favoriteList;
+    }
+
+    public LiveData<FavoriteEntry> getFavoriteEntry() {
+        return favoriteEntry;
+    }
+
+    public void setFavoriteEntry(LiveData<FavoriteEntry> favoriteEntry) {
+        this.favoriteEntry = favoriteEntry;
     }
 
 }

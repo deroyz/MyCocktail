@@ -108,7 +108,7 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
         mRecyclerView.setHasFixedSize(true);
 
-        mDrinkAdapter = new DrinkAdapter(mDrinks, mFavoriteEntries, this, mContext, getActivity());
+        mDrinkAdapter = new DrinkAdapter(mDrinks, mFavoriteEntries, this);
         mRecyclerView.setAdapter(mDrinkAdapter);
 
     }
@@ -129,6 +129,7 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
             public void onResponse(Call<DrinksResult> call, Response<DrinksResult> response) {
 
                 DrinksResult drinksResult = response.body();
+
                 mDrinks = drinksResult.getDrinks();
                 mDrinkAdapter.setDrinks(mDrinks);
 
@@ -138,7 +139,6 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
 
                     String printMessage = "";
                     printMessage = mDrinks.get(i).getStrDrink();
-
                     Log.e(LOG_TAG, "DisplayName: " + printMessage);
 
                 }
@@ -171,7 +171,7 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
                 Log.e(LOG_TAG, "Updating list of favorite drinks from LiveData in ViewModel");
 
                 mDrinkAdapter.setFavoriteEntries(favoriteEntries);
-
+                mFavoriteEntries = favoriteEntries;
             }
         });
     }
@@ -214,9 +214,8 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
     }
 
     @Override
-    public void favoriteOnClick(View v, int position) {
+    public void favoriteOnClick(View v, int position, boolean isFavorite) {
 
-        int a = 1;
 
         String favoriteId = mDrinks.get(position).getIdDrink();
         String favoriteName = mDrinks.get(position).getStrDrink();
@@ -226,21 +225,39 @@ public class PopularFragment extends Fragment implements DrinkAdapter.DrinkAdapt
         Log.e(LOG_TAG, favoriteName);
         Log.e(LOG_TAG, favoriteImageUrl);
 
-        if (a == 1) ;
-        {
-            favoriteEntry = new FavoriteEntry(favoriteId, favoriteName, favoriteImageUrl);
+        favoriteEntry = new FavoriteEntry(favoriteId, favoriteName, favoriteImageUrl);
+
+        Log.e(LOG_TAG, "" + isFavorite);
+
+
+        if (isFavorite){
 
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
 
                 @Override
                 public void run() {
 
-                    Log.e(LOG_TAG, "Data input in favoriteDatabase");
-                    favoriteDatabase.favoriteDao().insertFavorite(favoriteEntry);
+                    Log.e(LOG_TAG, "FavoriteEntry deleteById in favoriteDatabase");
+                    favoriteDatabase.favoriteDao().deleteByDrinkId(favoriteId);
 
                 }
 
             });
+
+        } else {
+
+            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+
+                @Override
+                public void run() {
+
+                    Log.e(LOG_TAG, "FavoriteEntry input in favoriteDatabase");
+                    favoriteDatabase.favoriteDao().insertFavorite(favoriteEntry);
+
+
+                }
+            });
+
         }
     }
 }

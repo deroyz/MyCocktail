@@ -63,6 +63,8 @@ public class SearchActivity extends AppCompatActivity implements DrinkAdapter.Dr
 
         Intent intent = getIntent();
 
+        //mRecyclerView.setVisibility(View.GONE);
+
         if (intent.hasExtra("searchQuery")) {
 
             mSearchQuery = intent.getStringExtra("searchQuery");
@@ -70,13 +72,15 @@ public class SearchActivity extends AppCompatActivity implements DrinkAdapter.Dr
             Log.e(LOG_TAG, mSearchQuery);
 
             setupNetwork(mSearchQuery);
+
+          // mRecyclerView.setVisibility(View.VISIBLE);
+
         }
 
         favoriteDatabase = FavoriteDatabase.getInstance(this);
 
         setupUi();
         setupFavoriteViewModel();
-
 
     }
 
@@ -89,7 +93,7 @@ public class SearchActivity extends AppCompatActivity implements DrinkAdapter.Dr
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         mRecyclerView.setHasFixedSize(true);
 
-        mDrinkAdapter = new DrinkAdapter(mDrinks, mFavoriteEntries, this, mContext, this);
+        mDrinkAdapter = new DrinkAdapter(mDrinks, mFavoriteEntries, this);
 
         mRecyclerView.setAdapter(mDrinkAdapter);
 
@@ -188,7 +192,7 @@ public class SearchActivity extends AppCompatActivity implements DrinkAdapter.Dr
     }
 
     @Override
-    public void favoriteOnClick(View v, int position) {
+    public void favoriteOnClick(View v, int position, boolean isFavorite) {
 
     }
 }

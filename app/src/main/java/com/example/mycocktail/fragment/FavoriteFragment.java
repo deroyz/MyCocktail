@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mycocktail.AppExecutors;
 import com.example.mycocktail.R;
 import com.example.mycocktail.adapter.DrinkAdapter;
 import com.example.mycocktail.data.FavoriteDatabase;
@@ -92,7 +93,7 @@ public class FavoriteFragment extends Fragment implements DrinkAdapter.DrinkAdap
 
     private void setupUi() {
 
-        Log.e(LOG_TAG, "setupUi1");
+        Log.e(LOG_TAG, "setupUi");
 
         mRecyclerView = mView.findViewById(R.id.rv_favorite_drinks);
 
@@ -143,7 +144,22 @@ public class FavoriteFragment extends Fragment implements DrinkAdapter.DrinkAdap
     }
 
     @Override
-    public void favoriteOnClick(View v, int position) {
+    public void favoriteOnClick(View v, int position, boolean isFavorite) {
 
+        String favoriteId = mFavoriteEntries.get(position).getIdDrink();
+
+        Log.e(LOG_TAG, "favoriteOnClick" + favoriteId);
+
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+
+            @Override
+            public void run() {
+
+                Log.e(LOG_TAG, "FavoriteEntry deleteById in favoriteDatabase");
+
+                favoriteDatabase.favoriteDao().deleteByDrinkId(favoriteId);
+
+            }
+        });
     }
 }

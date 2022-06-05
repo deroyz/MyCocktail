@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
         SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
-        searchView.setQueryHint("Search by Name and Ingredient");
+        searchView.setQueryHint("Search by cocktail name");
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 

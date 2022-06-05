@@ -108,7 +108,7 @@ public class TodaysFragment extends Fragment implements DrinkAdapter.DrinkAdapte
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
         mRecyclerView.setHasFixedSize(true);
 
-        mDrinkAdapter = new DrinkAdapter(mDrinks, mFavoriteEntries,this, mContext, getActivity());
+        mDrinkAdapter = new DrinkAdapter(mDrinks, mFavoriteEntries,this);
         mRecyclerView.setAdapter(mDrinkAdapter);
 
     }
@@ -204,7 +204,7 @@ public class TodaysFragment extends Fragment implements DrinkAdapter.DrinkAdapte
     }
 
     @Override
-    public void favoriteOnClick(View v, int position) {
+    public void favoriteOnClick(View v, int position, boolean isFavorite) {
 
     }
 }
