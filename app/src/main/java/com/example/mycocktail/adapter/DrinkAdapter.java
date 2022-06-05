@@ -118,12 +118,13 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
 
         if (mDrinks != null) {
 
-            Log.e(LOG_TAG, "favoriteChecking2");
+            Log.e(LOG_TAG, "favoriteChecking2 favorite obtained drink" + mDrinks.get(position).getStrDrink());
+
             final Drink drink = mDrinks.get(position);
 
             if (mFavoriteEntries != null) {
 
-                Log.e(LOG_TAG, "favoriteChecking3");
+                Log.e(LOG_TAG, "favoriteChecking3 mFavoriteEntries size: " + mFavoriteEntries.size());
 
                 for (int i = 0; i < mFavoriteEntries.size(); i++) {
 
