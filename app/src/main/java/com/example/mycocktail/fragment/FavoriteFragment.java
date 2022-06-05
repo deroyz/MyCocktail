@@ -146,6 +146,8 @@ public class FavoriteFragment extends Fragment implements DrinkAdapter.DrinkAdap
     @Override
     public void favoriteOnClick(View v, int position, boolean isFavorite) {
 
+        Log.e(LOG_TAG, "favoriteOnClick1 mFavoriteEntries size: " + mFavoriteEntries.size());
+
         String favoriteId = mFavoriteEntries.get(position).getIdDrink();
 
         Log.e(LOG_TAG, "favoriteOnClick" + favoriteId);

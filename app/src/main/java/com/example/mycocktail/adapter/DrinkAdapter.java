@@ -78,6 +78,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
 
         if (mDrinks != null) {
 
+            Log.e(LOG_TAG, "onBindViewHolder1, mDirnks not null");
             final Drink drink = mDrinks.get(position);
 
             String cocktailName = drink.getStrDrink();
@@ -94,8 +95,11 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
                     .load(imageUrl)
                     .into(holder.cocktailImage);
 
+        }
 
-        } else if (mDrinks == null && mFavoriteEntries != null) {
+        if (mDrinks == null && mFavoriteEntries != null) {
+
+            Log.e(LOG_TAG, "onBindViewHolder2, mFavoriteEntries not null");
 
             final FavoriteEntry favoriteEntry = mFavoriteEntries.get(position);
 
@@ -118,7 +122,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
 
         if (mDrinks != null) {
 
-            Log.e(LOG_TAG, "favoriteChecking2 favorite obtained drink" + mDrinks.get(position).getStrDrink());
+            Log.e(LOG_TAG, "favoriteChecking2 favorite obtained drink: " + mDrinks.get(position).getStrDrink());
 
             final Drink drink = mDrinks.get(position);
 
@@ -138,7 +142,7 @@ public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.DrinkViewHol
                     }
                 }
             }
-        } else if (mDrinks == null){
+        } else if (mDrinks == null) {
 
             Log.e(LOG_TAG, "favoriteChecking5");
             return true;
